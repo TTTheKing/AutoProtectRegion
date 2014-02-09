@@ -15,6 +15,7 @@ public class AutoProtectRegion extends JavaPlugin{
 	public void onEnable(){
 		
 		
+		
 	}
 	
 }
