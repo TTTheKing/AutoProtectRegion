@@ -1,0 +1,11 @@
+name: AutoProtectRegion
+description: A Plugin that lets Players protect their Buildings with WorldGuard Regions, whilest building.
+version: 0.1
+main: com.github.diereicheerethons.autoprotectregion.AutoProtectRegion
+authors: [Tobias Schmitz]
+softdepend: [Vault]
+depend: [WorldGuard, WorldEdit]
+commands:
+  autoprotectregion:
+    description: Main command for AutoProtectRegion.
+    aliases: [apr]

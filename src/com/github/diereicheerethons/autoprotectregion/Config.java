@@ -1,5 +1,7 @@
 package com.github.diereicheerethons.autoprotectregion;
 
-public class APRRegion {
+public class Config {
+	
+	//TODO CONFIG implementieren
 	
 }

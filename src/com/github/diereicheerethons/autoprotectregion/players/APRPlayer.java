@@ -2,7 +2,7 @@ package com.github.diereicheerethons.autoprotectregion.players;
 
 import org.bukkit.entity.Player;
 
-import com.github.diereicheerethons.autoprotectregion.APRRegion;
+import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion;
 
 public class APRPlayer {
 	
@@ -13,6 +13,7 @@ public class APRPlayer {
 	
 	public APRPlayer(Player player){
 		this.player=player;
+		APRPlayerList.list.add(this);
 	}
 	
 	public void setCurrentRegion(APRRegion region){
