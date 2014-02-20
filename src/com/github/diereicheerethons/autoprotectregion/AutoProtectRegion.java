@@ -11,6 +11,8 @@ public class AutoProtectRegion extends JavaPlugin{
 	public static AutoProtectRegion instance;
 	public static WorldGuardPlugin worldGuard;
 	
+	public static Config config;
+	
 	@Override
 	public void onLoad(){
 		instance = this;
@@ -19,12 +21,16 @@ public class AutoProtectRegion extends JavaPlugin{
 	@Override
 	public void onEnable(){
 		worldGuard = WGBukkit.getPlugin();
+		config = new Config(this);
+		
+		
 		if(worldGuard == null){
 			Bukkit.getConsoleSender().sendMessage("Disabling [APR]... WorldGuard is missing :(");
 			Bukkit.getPluginManager().disablePlugin(instance);
 		}
 		
 		Bukkit.getPluginManager().registerEvents(new BlockPlaceListener(), this);
+
 		
 		
 	}
