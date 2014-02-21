@@ -1,37 +1,48 @@
 package com.github.diereicheerethons.autoprotectregion.aprregions;
 
+import org.bukkit.World;
+
+import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
+
 public class APRRegion {
 	
-	private int maxXWidth = 20;
-	private int maxZWidth = 20;
+	private long maxXWidth = 20;
+	private long maxZWidth = 20;
 	
 	private String wgRegionID;
+	private World world = null;
+	
 	
 	ArrayPointList allPoints = new ArrayPointList();
 	ArrayPointList allBorderPoints = new ArrayPointList();
 	ArrayPointList allBorderPointsSorted = new ArrayPointList();
 	ArrayPointList edgePointsSorted = new ArrayPointList();
 	
-	public APRRegion(String regionID, int maxXWidth, int maxZWidth){
+	public APRRegion(String regionID, World world, long maxXWidth, long maxZWidth){
 		this.maxXWidth=maxXWidth;
 		this.maxZWidth=maxZWidth;
 		this.wgRegionID = regionID;
+		
+		APRRegionList.list.add(this);
 	}
 	
-	public APRRegion(String regionID){
-		this(regionID,20,20);
+	public APRRegion(String regionID, World world){
+		this(regionID, world,20L,20L);
 	}
 	
-	public boolean addPoint(long x, long z){
-		return addPoint(new XZPoint(x,z));
+	public boolean addPoint(long x, long z, long y){
+		return addPoint(new XZPoint(x,z,y), y);
 	}
 	
-	public boolean addPoint(XZPoint point){
+	public boolean addPoint(XZPoint point, long y){
 		if(!pointInRange(point))
 			return false;
 		if(allPoints.addPoint(point))	
 			return recalculateLists();
-		
+		else
+			allPoints.getPointAt(point.getX(), point.getZ()).setY(y);
 		return false;
 	}
 	
@@ -51,14 +62,36 @@ public class APRRegion {
 		return true;
 	}
 
-	private boolean recalculateLists() {
+	protected boolean recalculateLists() {
 		resetCalcLists();
 		calculateBorderPoints();
 		sortBorderPoints();
 		filterBorderPoints();
+		
+		updateOrCreateWGRegion();
 		return true;
 	}
 	
+	private void updateOrCreateWGRegion() {
+		RegionManager regionManager = WGBukkit.getRegionManager(world);
+		try{
+			ProtectedPolygonalRegion wgRegion = (ProtectedPolygonalRegion) regionManager.getRegionExact(wgRegionID);
+			updateWGRegion(wgRegion);
+		}catch(Exception e){
+			createNewWGRegion();
+		}
+				
+	}
+
+	private void createNewWGRegion() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void updateWGRegion(ProtectedPolygonalRegion wgRegion) {
+		// TODO LOOOS!
+	}
+
 	private void resetCalcLists() {
 		allBorderPoints = new ArrayPointList();
 		allBorderPointsSorted = new ArrayPointList();
@@ -72,7 +105,7 @@ public class APRRegion {
 		long smallestZ = allBorderPoints.getSmallestZ();
 		boolean isFirst = true;
 		//ArrayPointList tempList;
-		XZPoint lastPoint = new XZPoint(Long.MIN_VALUE,Long.MIN_VALUE);
+		XZPoint lastPoint = new XZPoint(Long.MIN_VALUE,Long.MIN_VALUE, 0);
 		long maximalZ = Long.MIN_VALUE;
 		
 		xLoop:for(long x=smallestX; x <= biggestX; x++){
@@ -84,8 +117,8 @@ public class APRRegion {
 					if(z == lastPoint.getZ())
 						maximalZ = Long.MIN_VALUE;
 					
-					allBorderPointsSorted.addPoint(new XZPoint(x,z));
-					lastPoint = new XZPoint(x,z);
+					allBorderPointsSorted.addPoint(allBorderPoints.getPointAt(x, z));
+					lastPoint = allBorderPoints.getPointAt(x, z);
 					if(!isFirst)
 						if((!allBorderPoints.containsPoint(x+1, z))
 								&&(allBorderPoints.containsPoint(x, z+1)))
@@ -110,8 +143,8 @@ public class APRRegion {
 					if(z == lastPoint.getZ())
 						maximalZ = Long.MIN_VALUE;
 					
-					allBorderPointsSorted.addPoint(new XZPoint(x,z));
-					lastPoint = new XZPoint(x,z);
+					allBorderPointsSorted.addPoint(allBorderPoints.getPointAt(x, z));
+					lastPoint = allBorderPoints.getPointAt(x, z);
 					if(!isFirst)
 						if((!allBorderPoints.containsPoint(x-1, z))
 								&&(allBorderPoints.containsPoint(x, z-1)))
@@ -125,58 +158,6 @@ public class APRRegion {
 				}
 			}
 		}
-		/*
-			tempList = new ArrayPointList();
-			for(XZPoint point:allBorderPoints){
-				if(point.getX() == x){
-					tempList.addPoint(point);
-				}
-			}
-			if(tempList.size()>0){
-				long z = tempList.getSmallestZ();
-				allBorderPointsSorted.add(new XZPoint(x,z));
-			}
-		}
-		
-		for(long z=smallestZ; z <= biggestZ; z++){
-			tempList = new ArrayPointList();
-			for(XZPoint point:allBorderPoints){
-				if(point.getZ() == z){
-					tempList.addPoint(point);
-				}
-			}
-			if(tempList.size()>0){
-				long x = tempList.getBiggestX();
-				allBorderPointsSorted.add(new XZPoint(x,z));
-			}
-		}
-		
-		for(long x=biggestX; x >= smallestX; x--){
-			tempList = new ArrayPointList();
-			for(XZPoint point:allBorderPoints){
-				if(point.getX() == x){
-					tempList.addPoint(point);
-				}
-			}
-			if(tempList.size()>0){
-				long z = tempList.getBiggestZ();
-				allBorderPointsSorted.add(new XZPoint(x,z));
-			}
-		}
-		
-		for(long z=biggestZ; z >= smallestZ; z--){
-			tempList = new ArrayPointList();
-			for(XZPoint point:allBorderPoints){
-				if(point.getZ() == z){
-					tempList.addPoint(point);
-				}
-			}
-			if(tempList.size()>0){
-				long x = tempList.getSmallestX();
-				allBorderPointsSorted.add(new XZPoint(x,z));
-			}
-		}
-		*/
 	}
 
 	private void filterBorderPoints() {
@@ -187,7 +168,7 @@ public class APRRegion {
 	}
 
 	private void calculateBorderPoints(){
-		int maxLenght = maxXWidth;
+		long maxLenght = maxXWidth;
 		if(maxZWidth>maxXWidth)
 			maxLenght = maxZWidth;
 		for(XZPoint point: allPoints){
@@ -216,19 +197,19 @@ public class APRRegion {
 
 
 	
-	public int getMaxXWidth() {
+	public long getMaxXWidth() {
 		return maxXWidth;
 	}
 
-	public void setMaxXWidth(int maxXWidth) {
+	public void setMaxXWidth(long maxXWidth) {
 		this.maxXWidth = maxXWidth;
 	}
 
-	public int getMaxZWidth() {
+	public long getMaxZWidth() {
 		return maxZWidth;
 	}
 
-	public void setMaxZWidth(int maxZWidth) {
+	public void setMaxZWidth(long maxZWidth) {
 		this.maxZWidth = maxZWidth;
 	}
 	
@@ -239,6 +220,10 @@ public class APRRegion {
 
 	public void setWgRegionID(String wgRegionID) {
 		this.wgRegionID = wgRegionID;
+	}
+	
+	public World getWorld(){
+		return world;
 	}
 	
 }

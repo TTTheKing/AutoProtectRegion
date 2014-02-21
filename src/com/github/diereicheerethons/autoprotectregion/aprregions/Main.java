@@ -29,12 +29,12 @@ public class Main {
 		
 		printMap(map);
 		
-		APRRegion region = new APRRegion("TEST", 20, 20);
+		APRRegion region = new APRRegion("TEST", null, 20, 20);
 		
 		for(int x = 0; x < 20; x++){
 			for(int z = 0; z < 20; z++){
 				if(map[x][z] == 1){
-					region.addPoint(x, z);
+					region.addPoint(x, z, 0);
 				}
 			}
 		}

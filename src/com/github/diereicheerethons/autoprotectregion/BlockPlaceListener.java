@@ -33,7 +33,8 @@ public class BlockPlaceListener implements Listener {
 			aprPlayer.setEditingRegion(false);
 			return;
 		}
-		aprRegion.addPoint(block.getX(), block.getZ());
+		aprRegion.addPoint(block.getX(), block.getZ(), block.getY());
+		
 		
 	}
 }

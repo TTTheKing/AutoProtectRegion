@@ -7,11 +7,15 @@ public class ArrayPointList extends ArrayList<XZPoint>{
 	
 	
 	public boolean addPoint(XZPoint point){
-		if(getPointAt(point.getX(), point.getZ()) == null)
+		if(getPointAt(point.getX(), point.getZ()) == null){
 			add(point);
-		else
-			return false;
-		return true;
+			return true;
+		}
+		return false;
+	}
+	
+	protected void addLoaded(XZPoint point){
+		add(point);
 	}
 	
 	public boolean containsPoint(long x, long z){
@@ -91,5 +95,25 @@ public class ArrayPointList extends ArrayList<XZPoint>{
 					return point;
 		}
 		return null;
+	}
+	
+	public long getMaxY(){
+		long max = Long.MIN_VALUE;
+		for(XZPoint point: this){
+			if(point.getMaxY() > max){
+				max = point.getMaxY();
+			}
+		}
+		return max;
+	}
+	
+	public long getMinY(){
+		long min = Long.MAX_VALUE;
+		for(XZPoint point: this){
+			if(point.getMinY() < min){
+				min = point.getMinY();
+			}
+		}
+		return min;
 	}
 }

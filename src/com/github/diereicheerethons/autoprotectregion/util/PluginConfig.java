@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.File;
+import java.io.IOException;
 
 import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;
@@ -70,6 +71,11 @@ public abstract class PluginConfig {
 		for(String key: configEntries.keySet()){
 			Object value = configEntries.get(key);
 			ymlFile.set(key, value);
+		}
+		try {
+			ymlFile.save(configFile);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
