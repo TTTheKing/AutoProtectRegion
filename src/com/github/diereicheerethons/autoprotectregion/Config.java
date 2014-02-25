@@ -14,8 +14,9 @@ public class Config extends PluginConfig{
 
 	@Override
 	protected void setupDefault(HashMap<String, Object> configEntries) {
-		configEntries.put("pluginName", "APR");
-		
+		configEntries.put("pluginShortName", "APR");
+		configEntries.put("maxXWidth", 20L);
+		configEntries.put("maxZWidth", 20L);
 	}
 
 }

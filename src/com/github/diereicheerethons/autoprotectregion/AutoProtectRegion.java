@@ -1,7 +1,10 @@
 package com.github.diereicheerethons.autoprotectregion;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import net.milkbowl.vault.permission.Permission;
 
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegionList;
 import com.github.diereicheerethons.autoprotectregion.cmd.CommandHandler;
@@ -13,6 +16,7 @@ public class AutoProtectRegion extends JavaPlugin{
 	
 	public static AutoProtectRegion instance;
 	public static WorldGuardPlugin worldGuard;
+	public static Permission permission;
 	
 	public static Config config;
 	
@@ -23,6 +27,8 @@ public class AutoProtectRegion extends JavaPlugin{
 	
 	@Override
 	public void onEnable(){
+		setupPermissions();
+		permission = permissionProvider;
 		worldGuard = WGBukkit.getPlugin();
 		config = new Config(this);
 		
@@ -49,6 +55,21 @@ public class AutoProtectRegion extends JavaPlugin{
 				APRPlayerList.savePlayers();
 			}
 		}, 0L, 18000L);
+	}
+	
+	// Permissions
+	private Permission permissionProvider = null;
+
+	private Boolean setupPermissions() {
+		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
+		if (permissionProvider != null) {
+			this.permissionProvider = permissionProvider.getProvider();
+		}
+		return (this.permissionProvider != null);
+	}
+
+	public Permission getPermissionHandler() {
+		return permissionProvider;
 	}
 	
 }

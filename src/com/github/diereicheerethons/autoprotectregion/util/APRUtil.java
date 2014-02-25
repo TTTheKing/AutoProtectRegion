@@ -1,5 +1,9 @@
 package com.github.diereicheerethons.autoprotectregion.util;
 
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -17,4 +21,17 @@ public class APRUtil {
         
         return id;
     }
+	
+	
+	public static void playerMsg(CommandSender sender, String msg){
+		if(sender instanceof Player)
+			playerMsg((Player) sender, msg);
+		else
+			sender.sendMessage(ChatColor.RED+"[APR]: This should be done as Player!");
+	}
+	
+	public static void playerMsg(Player sender, String msg){
+		
+	}
+	
 }

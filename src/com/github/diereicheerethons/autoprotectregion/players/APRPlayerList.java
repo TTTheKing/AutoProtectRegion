@@ -46,7 +46,8 @@ public class APRPlayerList {
 		
 		for(APRPlayer player : list){
 			String key = player.getPlayer().getName();
-			ymlFile.set(key+".currentRegion", player.getCurrentRegion().getWgRegionID());
+			if(player.getCurrentRegion() != null)
+				ymlFile.set(key+".currentRegion", player.getCurrentRegion().getWgRegionID());
 			ymlFile.set(key+".isEditing", player.isEditingRegion());
 		}
 		
@@ -66,7 +67,10 @@ public class APRPlayerList {
 			Player player = AutoProtectRegion.instance.getServer().getPlayer(key);
 			APRPlayer aprPlayer = getOrCreateAPRPlayer(player);
 			aprPlayer.setEditingRegion(ymlFile.getBoolean(key+".isEditing"));
-			aprPlayer.setCurrentRegion(APRRegionList.get(ymlFile.getString(key+".currentRegion")));
+			if(ymlFile.contains(key+".currentRegion"))
+				aprPlayer.setCurrentRegion(APRRegionList.get(ymlFile.getString(key+".currentRegion")));
+			else
+				aprPlayer.setCurrentRegion(null);
 		}
 	}
 	
