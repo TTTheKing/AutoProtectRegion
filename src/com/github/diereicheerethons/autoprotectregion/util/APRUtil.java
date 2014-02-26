@@ -31,7 +31,7 @@ public class APRUtil {
 	}
 	
 	public static void playerMsg(Player sender, String msg){
-		
+		sender.sendMessage(ChatColor.GOLD+"[APR]: "+ChatColor.WHITE+ msg);
 	}
 	
 }

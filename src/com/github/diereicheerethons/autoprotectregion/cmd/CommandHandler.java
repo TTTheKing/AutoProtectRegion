@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
 import com.github.diereicheerethons.autoprotectregion.util.PluginCommand;
@@ -22,7 +23,9 @@ public class CommandHandler implements CommandExecutor {
 		
 		cmds.put("build.cancel", new BuildCancelCMD());
 		cmds.put("build", new BuildCMD());
-		
+		cmds.put("reload", new ReloadCMD());
+		cmds.put("debug", new DebugCMD());
+		cmds.put("save", new SaveCMD());
 	}
 	
 	
@@ -49,17 +52,21 @@ public class CommandHandler implements CommandExecutor {
 			}
 		}
 		if(!keyMatch.equalsIgnoreCase(""))
-			return cmds.get(keyMatch).onPluginCommand(sender, command, keyMatch, Arrays.copyOfRange(args, rating-1, args.length));
+			return cmds.get(keyMatch).onPluginCommand(sender, command, keyMatch, Arrays.copyOfRange(args, rating, args.length));
 		
-		sender.sendMessage(getHelp());
+		
+		sender.sendMessage(getHelp(sender instanceof Player, sender));
 		return false;
 	}
 	
-	private String getHelp(){
+	private String getHelp(boolean isPlayer, CommandSender sender){
 		String helpText = ChatColor.AQUA+"================[APR]==================";
 		
 		for(String key:cmds.keySet()){
 			PluginCommand cmd = cmds.get(key);
+			if(isPlayer)
+				if(!AutoProtectRegion.permission.playerHas((Player) sender, cmd.getPermission()))
+					continue;
 			helpText += "\n" + cmd.getPluginCommandHelp();
 		}
 		

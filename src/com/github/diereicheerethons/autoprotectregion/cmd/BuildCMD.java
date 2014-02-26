@@ -38,7 +38,7 @@ public class BuildCMD extends PluginCommand {
 			HashMap<String, String> unreqArgs, String[] otherArgs) {
 		
 		Player player = (Player) sender;
-		if(requiredArgs.get("region-name") == null){
+		if(!requiredArgs.containsKey("region-name")){
 			sender.sendMessage(this.getPluginCommandHelp());
 			return false;
 		}
@@ -46,7 +46,7 @@ public class BuildCMD extends PluginCommand {
 		String regionID = "apr_"+player.getName()+"_"+requiredArgs.get("region-name");
 		APRRegion aprRegion = APRRegionList.get(regionID);
 		if(aprRegion==null){
-			sender.sendMessage(requiredArgs.get("region-name"));
+			sender.sendMessage("Created new Region");
 			aprRegion = new APRRegion(regionID, player.getWorld(), AutoProtectRegion.config.getLong("maxXWidth"), AutoProtectRegion.config.getLong("maxZWidth"));
 		}
 		aprPlayer.setCurrentRegion(aprRegion);

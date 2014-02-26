@@ -42,19 +42,41 @@ public class AutoProtectRegion extends JavaPlugin{
 		
 		this.getCommand("autoprotectregion").setExecutor(new CommandHandler());
 		
-		APRRegionList.load();
-		APRPlayerList.loadPlayers();
-		
+		loadData();
 		initializeSavers();
+	}
+	
+	@Override
+	public void onDisable(){
+		saveAll();
 	}
 
 	private void initializeSavers() {
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
-				APRRegionList.save();
-				APRPlayerList.savePlayers();
+				saveData();
 			}
 		}, 0L, 18000L);
+	}
+	
+	public void saveData(){
+		APRRegionList.save();
+		APRPlayerList.savePlayers();
+	}
+	
+	public void loadData(){
+		APRRegionList.load();
+		APRPlayerList.loadPlayers();
+	}
+	
+	public void saveAll(){
+		config.save();
+		saveData();
+	}
+	
+	public void loadAll(){
+		config.load();
+		loadData();
 	}
 	
 	// Permissions

@@ -4,19 +4,19 @@ import java.util.HashMap;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import com.github.diereicheerethons.autoprotectregion.players.APRPlayer;
+import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
+import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegionList;
 import com.github.diereicheerethons.autoprotectregion.players.APRPlayerList;
 import com.github.diereicheerethons.autoprotectregion.util.PluginCommand;
 
-public class BuildCancelCMD extends PluginCommand {
+public class DebugCMD extends PluginCommand {
 
 	@Override
 	public void setUp() {
-		super.command    = "build.cancel";
-		super.permission = "apr.build.cancel";
-		super.senderType = "player";
+		super.command    = "debug";
+		super.permission = "apr.debug";
+		super.senderType = "player and console";
 	}
 
 	@Override
@@ -28,19 +28,15 @@ public class BuildCancelCMD extends PluginCommand {
 	public boolean onCommand(CommandSender sender, Command command,
 			HashMap<String, String> requiredArgs,
 			HashMap<String, String> unreqArgs, String[] otherArgs) {
-		
-		Player player = (Player) sender;
-		APRPlayer aprPlayer = APRPlayerList.getOrCreateAPRPlayer(player);
-		
-		aprPlayer.setCurrentRegion(null);
-		aprPlayer.setEditingRegion(false);
-		
-		return true;
+		AutoProtectRegion.config.sendDebugInfo(sender);
+		APRPlayerList.sendDebugData(sender);
+		APRRegionList.sendDebugData(sender);
+		return false;
 	}
 
 	@Override
 	public String getCommandHelp() {
-		return "Cancel building in a Region";
+		return "Sends debug info";
 	}
 
 }

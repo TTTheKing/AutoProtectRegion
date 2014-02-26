@@ -17,12 +17,11 @@ public abstract class PluginCommand {
 	private static JavaPlugin plugin;
 	private static Permission permissionsHandler;
 	private static String pluginCommand;
+	private static String pluginShortName;
 	
 	protected String command;
 	protected String permission;
 	protected String senderType;
-	protected String pluginShortName;
-	
 	
 	public abstract void setUp();
 	
@@ -31,10 +30,9 @@ public abstract class PluginCommand {
 	protected PluginCommand(){
 		setUp();
 		setArguments();
-		pluginShortName = plugin.getName();
 	}
 	
-	public void setPluginShortName(String shortName){
+	public static void setPluginShortName(String shortName){
 		pluginShortName = shortName;
 	}
 	
@@ -47,7 +45,7 @@ public abstract class PluginCommand {
 			
 			Player player = (Player) sender;
 			if((!permissionsHandler.playerHas(player, permission)) || (!player.isOp())){
-				APRUtil.playerMsg(sender, ChatColor.RED+"["+pluginShortName+"]: No permissions for the command \""+cmd+"\"!");
+				sender.sendMessage(ChatColor.RED+"["+pluginShortName+"]: No permissions for the command \""+cmd+"\"!");
 				return false;
 			}
 			
@@ -83,7 +81,7 @@ public abstract class PluginCommand {
 				if(args.length >= (argsCounter+1))
 					currentArg = args[argsCounter];
 				else
-					currentArg = "";
+					continue;
 				boolean required;
 				if(arg.getProperties().get("required")!=null)
 					required = (Boolean) arg.getProperties().get("required");
@@ -126,6 +124,18 @@ public abstract class PluginCommand {
 		return helpText +ChatColor.YELLOW+ "- " + getCommandHelp();
 	}
 	
+	public String getPermission(){
+		return permission;
+	}
+	
+	public String getCommandName(){
+		return command;
+	}
+	
+	public String getSenderType(){
+		return senderType;
+	}
+	
 	public abstract String getCommandHelp();
 	
 	public static void setPermissionsHandler(Permission permHandler) {
@@ -133,10 +143,11 @@ public abstract class PluginCommand {
 	}
 	public static void setPlugin(JavaPlugin plugin){
 		PluginCommand.plugin = plugin;
+		PluginCommand.pluginShortName = PluginCommand.plugin.getName();
 	}
 
 	public static String getPluginCommand() {
-		return pluginCommand;
+		return PluginCommand.pluginCommand;
 	}
 
 	public static void setPluginCommand(String pluginCommand) {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,10 +20,18 @@ public class APRRegionList {
 	
 	public static APRRegion get(String name){
 		for(APRRegion region:list){
-			if(region.getWgRegionID() == name)
+			if(region.getWgRegionID().equalsIgnoreCase(name))
 				return region;
 		}
 		return null;
+	}
+	
+	public static void sendDebugData(CommandSender sender){
+		for(APRRegion region : list){
+			sender.sendMessage(region.getWgRegionID() + "| World = " +region.getWorld().getName());
+			sender.sendMessage(region.getWgRegionID() + "| maxXWidth = " +region.getMaxXWidth());
+			sender.sendMessage(region.getWgRegionID() + "| maxZWidth = " +region.getMaxZWidth());
+		}
 	}
 	
 	public static void save(){
@@ -59,6 +68,8 @@ public class APRRegionList {
 	}
 	
 	public static void load(){
+		list = new ArrayList<APRRegion>();
+		
 		FileConfiguration ymlFile = YamlConfiguration.loadConfiguration(saveFile);
 		
 		Set<String> keys = ymlFile.getKeys(false);
@@ -71,19 +82,20 @@ public class APRRegionList {
 			
 			APRRegion region = new APRRegion(key, world, maxXWidth, maxZWidth);
 			
-			ConfigurationSection points = ymlFile.getConfigurationSection(key + ".allPoints");
-			Set<String> pointCounter = points.getKeys(false);
-			
-			for(String point: pointCounter){
-				long x = points.getLong(point + ".x");
-				long z = points.getLong(point + ".z");
-				long minY = points.getLong(point + ".minY");
-				long maxY = points.getLong(point + ".maxY");
+			if(ymlFile.contains(key + ".allPoints")){
+				ConfigurationSection points = ymlFile.getConfigurationSection(key + ".allPoints");
+				Set<String> pointCounter = points.getKeys(false);
 				
-				region.allPoints.addLoaded(new XZPoint(x,z,maxY,minY));
+				for(String point: pointCounter){
+					long x = points.getLong(point + ".x");
+					long z = points.getLong(point + ".z");
+					long minY = points.getLong(point + ".minY");
+					long maxY = points.getLong(point + ".maxY");
+					
+					region.allPoints.addLoaded(new XZPoint(x,z,maxY,minY));
+				}
+				region.recalculateLists();
 			}
-			region.recalculateLists();
-			
 		}
 		
 	}

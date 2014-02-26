@@ -1,7 +1,5 @@
 package com.github.diereicheerethons.autoprotectregion;
 
-import java.util.HashMap;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.diereicheerethons.autoprotectregion.util.PluginConfig;
@@ -13,10 +11,9 @@ public class Config extends PluginConfig{
 	}
 
 	@Override
-	protected void setupDefault(HashMap<String, Object> configEntries) {
-		configEntries.put("pluginShortName", "APR");
-		configEntries.put("maxXWidth", 20L);
-		configEntries.put("maxZWidth", 20L);
+	protected void setupDefault() {
+		set("pluginShortName", new String("APR"), String.class);
+		set("maxXWidth", new Long(20), Long.class);
+		set("maxZWidth", new Long(20), Long.class);
 	}
-
 }

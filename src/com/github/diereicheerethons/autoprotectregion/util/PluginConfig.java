@@ -1,6 +1,5 @@
 package com.github.diereicheerethons.autoprotectregion.util;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.io.File;
@@ -8,6 +7,7 @@ import java.io.IOException;
 
 import org.bukkit.Color;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +20,7 @@ public abstract class PluginConfig {
 	protected long saveTimes;
 	protected JavaPlugin plugin;
 	protected File configFile;
-	protected HashMap<String, Object> configEntries = new HashMap<String, Object>();
+	protected ConfigList configEntries = new ConfigList();
 	
 	public PluginConfig(JavaPlugin plugin){
 		this(18000L, plugin); // Default all 15 Mins
@@ -28,24 +28,26 @@ public abstract class PluginConfig {
 	
 	
 	public PluginConfig(long savetime, JavaPlugin plugin){
+		configEntries = new ConfigList();
 		
 		configFile = new File(plugin.getDataFolder(), "config.yml");
 		
 		this.saveTimes = savetime;
 		this.plugin=plugin;
 		
-		if(!configExists())
+		if(!configExists()){
 			setupDefaults();
-		else
+		}else{
 			load();
+		}
 		
 		initializeSaver();
 	}
 	
-	protected abstract void setupDefault(HashMap<String, Object> configEntries);
+	protected abstract void setupDefault();
 	
 	private void setupDefaults() {
-		setupDefault(configEntries);
+		setupDefault();
 		save();
 	}
 
@@ -69,8 +71,7 @@ public abstract class PluginConfig {
 			ymlFile = new YamlConfiguration();
 		
 		for(String key: configEntries.keySet()){
-			Object value = configEntries.get(key);
-			ymlFile.set(key, value);
+			ymlFile.set(key, configEntries.get(key));
 		}
 		try {
 			ymlFile.save(configFile);
@@ -82,18 +83,54 @@ public abstract class PluginConfig {
 	public boolean load() {
 		if(!configExists())
 			return false;
+		setupDefaults();
 		FileConfiguration ymlFile = YamlConfiguration.loadConfiguration(configFile);
 		
 		for(String key: configEntries.keySet()){
-			configEntries.put(key, ymlFile.get(key));
+			if(ymlFile.contains(key)){
+				Class<?> type = configEntries.getType(key);
+				
+				if(type == Integer.class){
+					configEntries.put(key, ymlFile.getInt(key));
+				}else if(type == Boolean.class){
+					configEntries.put(key, ymlFile.getBoolean(key));
+				}else if(type == Double.class){
+					configEntries.put(key, ymlFile.getDouble(key));
+				}else if(type == Long.class){
+					configEntries.put(key, ymlFile.getLong(key));
+				}else if(type == String.class){
+					configEntries.put(key, ymlFile.getString(key));
+				}else if(type == List.class){
+					configEntries.put(key, ymlFile.getList(key));
+				}else if(type == Color.class){
+					configEntries.put(key, ymlFile.getColor(key));
+				}else if(type == ItemStack.class){
+					configEntries.put(key, ymlFile.getItemStack(key));
+				}else if(type == OfflinePlayer.class){
+					configEntries.put(key, ymlFile.getOfflinePlayer(key));
+				}else if(type == Vector.class){
+					configEntries.put(key, ymlFile.getVector(key));
+				}else{
+					configEntries.put(key, ymlFile.get(key));
+				}
+			}
 		}
 		
 		return true;
 	}
 	
-	public void set(String key, Object value){
-		configEntries.put(key, value);
+	public void set(String key, Object value, Class<?> type){
+		configEntries.put(key, value, type);
 	}
+	
+	public void sendDebugInfo(CommandSender sender){
+		String string = "";
+		for(String allkey:configEntries.keySet()){
+			string += allkey +" --> "+configEntries.get(allkey)+"\n";
+		}
+		sender.sendMessage(string);
+	}
+	
 	
 	/*-*****************************
 	 * **********GETTERS************

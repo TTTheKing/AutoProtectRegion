@@ -24,7 +24,7 @@ public class APRRegion {
 		this.maxXWidth=maxXWidth;
 		this.maxZWidth=maxZWidth;
 		this.wgRegionID = regionID;
-		
+		this.world = world;
 		APRRegionList.list.add(this);
 	}
 	
