@@ -1,10 +1,16 @@
 package com.github.diereicheerethons.autoprotectregion.aprregions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.World;
 
+import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion.CircularInheritanceException;
 
 public class APRRegion {
 	
@@ -76,20 +82,56 @@ public class APRRegion {
 		RegionManager regionManager = WGBukkit.getRegionManager(world);
 		try{
 			ProtectedPolygonalRegion wgRegion = (ProtectedPolygonalRegion) regionManager.getRegionExact(wgRegionID);
-			updateWGRegion(wgRegion);
+			if(wgRegion == null){
+				createNewWGRegion(regionManager);
+				return;
+			}
+			updateWGRegion(wgRegion, regionManager);
+			return;
 		}catch(Exception e){
-			createNewWGRegion();
+			createNewWGRegion(regionManager);
+			return;
 		}
 				
 	}
 
-	private void createNewWGRegion() {
-		// TODO Auto-generated method stub
+	private void createNewWGRegion(RegionManager regionManager) {
+		List<BlockVector2D> points = new ArrayList<BlockVector2D>();
+		for(XZPoint point : edgePointsSorted){
+			points.add(new BlockVector2D(point.getX(), point.getZ()));
+		}
+		ProtectedPolygonalRegion newWGRegion = new ProtectedPolygonalRegion(wgRegionID, points,
+				(int) allPoints.getMinY(),(int) allPoints.getMaxY());
+		
+		
 		
 	}
 
-	private void updateWGRegion(ProtectedPolygonalRegion wgRegion) {
-		// TODO LOOOS!
+	private void updateWGRegion(ProtectedPolygonalRegion oldWGRegion, RegionManager regionManager) {
+		List<BlockVector2D> points = new ArrayList<BlockVector2D>();
+		for(XZPoint point : edgePointsSorted){
+			points.add(new BlockVector2D(point.getX(), point.getZ()));
+		}
+		ProtectedPolygonalRegion newWGRegion = new ProtectedPolygonalRegion(wgRegionID, points,
+				(int) allPoints.getMinY(),(int) allPoints.getMaxY());
+		
+		newWGRegion.setMembers(oldWGRegion.getMembers());
+		newWGRegion.setOwners(oldWGRegion.getOwners());
+		newWGRegion.setFlags(oldWGRegion.getFlags());
+		newWGRegion.setPriority(oldWGRegion.getPriority());
+        try {
+        	newWGRegion.setParent(oldWGRegion.getParent());
+        } catch (CircularInheritanceException ignore) {
+            // This should not be thrown
+        }
+
+        regionManager.addRegion(newWGRegion);
+        try {
+			regionManager.save();
+		} catch (ProtectionDatabaseException e) {
+			
+			//TODO ERROR Handling
+		}
 	}
 
 	private void resetCalcLists() {

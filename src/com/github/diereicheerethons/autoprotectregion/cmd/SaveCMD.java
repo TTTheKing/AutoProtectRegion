@@ -12,8 +12,8 @@ public class SaveCMD extends PluginCommand {
 
 	@Override
 	public void setUp() {
-		super.command    = "debug";
-		super.permission = "apr.debug";
+		super.command    = "save";
+		super.permission = "apr.save";
 		super.senderType = "player and console";
 	}
 
