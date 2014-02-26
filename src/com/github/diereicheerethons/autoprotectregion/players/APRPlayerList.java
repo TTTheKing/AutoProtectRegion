@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegionList;
@@ -18,22 +19,27 @@ public class APRPlayerList {
 	
 	public static ArrayList<APRPlayer> list = new ArrayList<APRPlayer>();
 	
-	public static APRPlayer getAPRPlayer(Player player){
+	public static void sendDebugData(CommandSender sender){
+		for(APRPlayer aprPlayer: list){
+			sender.sendMessage(aprPlayer.getPlayer().getName() + "| currentRegion = " +aprPlayer.getCurrentRegion());
+			sender.sendMessage(aprPlayer.getPlayer().getName() + "| isEditing = " +aprPlayer.isEditingRegion());
+		}
+	}
+	
+	public static APRPlayer getAPRPlayer(OfflinePlayer player){
 		for(APRPlayer aprPlayer : list){
-			if(aprPlayer.getPlayer()==player){
+			if(aprPlayer.getPlayer().getName().equalsIgnoreCase(player.getName())){
 				return aprPlayer;
 			}
 		}
 		return null;
 	}
 	
-	public static APRPlayer getOrCreateAPRPlayer(Player player){
+	public static APRPlayer getOrCreateAPRPlayer(OfflinePlayer player){
 		APRPlayer aprPlayer = getAPRPlayer(player);
-		if(aprPlayer == null){
-			return new APRPlayer(player);
-		}else{
+		if(aprPlayer != null)
 			return aprPlayer;
-		}
+		return new APRPlayer(player);
 	}
 	
 	
@@ -59,12 +65,14 @@ public class APRPlayerList {
 	}
 	
 	public static void loadPlayers(){
+		list = new ArrayList<APRPlayer>();
+		
 		FileConfiguration ymlFile = YamlConfiguration.loadConfiguration(saveFile);
 		
 		Set<String> keys = ymlFile.getKeys(false);
 		
 		for(String key: keys){
-			Player player = AutoProtectRegion.instance.getServer().getPlayer(key);
+			OfflinePlayer player = AutoProtectRegion.instance.getServer().getOfflinePlayer(key);
 			APRPlayer aprPlayer = getOrCreateAPRPlayer(player);
 			aprPlayer.setEditingRegion(ymlFile.getBoolean(key+".isEditing"));
 			if(ymlFile.contains(key+".currentRegion"))
