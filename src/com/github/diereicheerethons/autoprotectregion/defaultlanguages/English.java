@@ -27,5 +27,8 @@ public class English extends PluginConfig{
 		set("noWorldAndPlayerName", "Please define a player name and a world name.", String.class);
 		set("noPermissionsDeleteOthers", "No permissions for the command \"delete\" on other players!", String.class);
 		set("noWorldName", "Please define a world name.", String.class);
+		set("blockNotInRegionPart1", "This Block hasn't been added to your Region: ", String.class);
+		set("blockNotInRegionPart1", ". Are you too far away? Use /apr build cancel to stop Building your Region.", String.class);
+		set("notInSameWorld", "You stopped building in your Region, due to changing the world.", String.class);
 	}
 }

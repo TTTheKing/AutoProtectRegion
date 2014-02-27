@@ -27,6 +27,9 @@ public class German extends PluginConfig{
 		set("noWorldAndPlayerName", "Bitte gib einen Spielernamen und einen Weltnamen an", String.class);
 		set("noPermissionsDeleteOthers", "Keine Berechtigung für den Command \"delete\" bei anderen Spielern!", String.class);
 		set("noWorldName", "Bitte gib einen Weltnamen an.", String.class);
+		set("blockNotInRegionPart1", "Block wurde nicht zu deiner Region: ", String.class);
+		set("blockNotInRegionPart1", " hinzugefuegt. Zu weit weg? Nutze /apr build cancel um das bauen an der Region zu beenden.", String.class);
+		set("notInSameWorld", "Du hast aufgehoert deine Region zu bearbeiten, weil du die Welt gewechselt hast.", String.class);
 	}
 	
 }

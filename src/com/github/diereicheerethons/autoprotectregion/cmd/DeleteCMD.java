@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
 
 import com.github.diereicheerethons.autoprotectregion.APR;
 import com.github.diereicheerethons.autoprotectregion.Translator;
+import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegionList;
+import com.github.diereicheerethons.autoprotectregion.players.APRPlayer;
+import com.github.diereicheerethons.autoprotectregion.players.APRPlayerList;
 import com.github.diereicheerethons.autoprotectregion.util.PluginCommand;
 import com.github.diereicheerethons.autoprotectregion.util.PluginCommandArgument;
 import com.sk89q.worldguard.bukkit.WGBukkit;
@@ -70,12 +73,19 @@ public class DeleteCMD extends PluginCommand {
 			sender.sendMessage(this.getPluginCommandHelp());
 			return false;
 		}
+		Player player = (Player) sender;
 		
-		World world = ((Player) sender).getWorld();
-		String playerName = ((Player) sender).getName();
+		World world = player.getWorld();
+		String playerName = player.getName();
 		
 		RegionManager regionManager = WGBukkit.getRegionManager(world);
-		regionManager.removeRegion("apr_"+playerName+"_"+requiredArgs.get("region-name"));
+		String regionName = "apr_"+playerName+"_"+requiredArgs.get("region-name");
+		regionManager.removeRegion(regionName);
+		APRRegionList.remove(regionName);
+		APRPlayer aprPlayer = APRPlayerList.getOrCreateAPRPlayer(player);
+		aprPlayer.setCurrentRegion(null);
+		aprPlayer.setEditingRegion(false);
+		
 		return true;
 	}
 
@@ -94,17 +104,22 @@ public class DeleteCMD extends PluginCommand {
 				sender.sendMessage(ChatColor.RED+"[APR]: "+Translator.translate("noPermissionsDeleteOthers"));
 			}
 		}
-		
+		Player player = (Player) sender;
 		String worldName;
 		if(unreqArgs.containsKey("worldName"))
 			worldName = unreqArgs.get("worldName");
 		else
-			worldName = ((Player) sender).getWorld().getName();
+			worldName = player.getWorld().getName();
 		String playerName = unreqArgs.get("otherPlayer");
 		
 		RegionManager regionManager = WGBukkit.getRegionManager(APR.instance.getServer().getWorld(worldName));
 		
-		regionManager.removeRegion("apr_"+playerName+"_"+requiredArgs.get("region-name"));
+		String regionName = "apr_"+playerName+"_"+requiredArgs.get("region-name");
+		regionManager.removeRegion(regionName);
+		APRRegionList.remove(regionName);
+		APRPlayer aprPlayer = APRPlayerList.getOrCreateAPRPlayer(player);
+		aprPlayer.setCurrentRegion(null);
+		aprPlayer.setEditingRegion(false);
 		
 		return true;
 	}

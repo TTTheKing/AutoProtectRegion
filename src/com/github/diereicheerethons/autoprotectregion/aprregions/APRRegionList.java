@@ -27,6 +27,13 @@ public class APRRegionList {
 		return null;
 	}
 	
+	public static boolean remove(String regionName){
+		APRRegion region = APRRegionList.get(regionName);
+		if(region != null)
+			return list.remove(region);
+		return false;
+	}
+	
 	public static void sendDebugData(CommandSender sender){
 		for(APRRegion region : list){
 			sender.sendMessage(region.getWgRegionID() + "| World = " +region.getWorld().getName());

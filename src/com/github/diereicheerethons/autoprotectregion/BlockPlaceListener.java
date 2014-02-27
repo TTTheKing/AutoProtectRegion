@@ -1,5 +1,6 @@
 package com.github.diereicheerethons.autoprotectregion;
 
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,8 +10,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion;
 import com.github.diereicheerethons.autoprotectregion.players.APRPlayer;
 import com.github.diereicheerethons.autoprotectregion.players.APRPlayerList;
-import com.sk89q.worldguard.bukkit.WGBukkit;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class BlockPlaceListener implements Listener {
 	
@@ -25,15 +24,17 @@ public class BlockPlaceListener implements Listener {
 		
 		APRRegion aprRegion = aprPlayer.getCurrentRegion();
 		
-		
-		ProtectedRegion wgRegion = WGBukkit.getRegionManager(player.getWorld()).getRegionExact(aprRegion.getWgRegionID());
-		if(wgRegion == null){
-			player.sendMessage("[APR]: "+Translator.translate("stoppedEditing"));
-			aprPlayer.setCurrentRegion(null);
-			aprPlayer.setEditingRegion(false);
-			return;
+		if(!player.getWorld().getName().equalsIgnoreCase(aprRegion.getWorld().getName())){
+			player.sendMessage(ChatColor.GOLD+"[APR]: "+
+					ChatColor.RED+Translator.translate("notInSameWorld"));
 		}
-		aprRegion.addPoint(block.getX(), block.getZ(), block.getY());
+		
+		if(!aprRegion.addPoint(block.getX(), block.getZ(), block.getY())){
+			player.sendMessage(ChatColor.GOLD+"[APR]: "+ChatColor.RED+
+					Translator.translate("blockNotInRegionPart1")+
+					aprRegion.getWgRegionID()+
+					Translator.translate("blockNotInRegionPart2"));
+		}
 		
 		
 	}

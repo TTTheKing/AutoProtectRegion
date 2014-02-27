@@ -11,4 +11,5 @@ public class APR {
 	
 	public static WorldGuardPlugin worldGuard = AutoProtectRegion.worldGuard;
 	public static Permission permission = AutoProtectRegion.permission;
+	public static Translator language = AutoProtectRegion.language;
 }
