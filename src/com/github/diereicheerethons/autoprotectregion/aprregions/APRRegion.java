@@ -3,10 +3,15 @@ package com.github.diereicheerethons.autoprotectregion.aprregions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
+import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
+import com.github.diereicheerethons.autoprotectregion.Translator;
 import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
@@ -19,6 +24,7 @@ public class APRRegion {
 	
 	private String wgRegionID;
 	private World world = null;
+	private OfflinePlayer owner;
 	
 	
 	ArrayPointList allPoints = new ArrayPointList();
@@ -26,16 +32,21 @@ public class APRRegion {
 	ArrayPointList allBorderPointsSorted = new ArrayPointList();
 	ArrayPointList edgePointsSorted = new ArrayPointList();
 	
-	public APRRegion(String regionID, World world, long maxXWidth, long maxZWidth){
+	public APRRegion(OfflinePlayer owner, String regionID, World world, long maxXWidth, long maxZWidth){
 		this.maxXWidth=maxXWidth;
 		this.maxZWidth=maxZWidth;
 		this.wgRegionID = regionID;
 		this.world = world;
+		this.owner = owner;
 		APRRegionList.list.add(this);
 	}
 	
-	public APRRegion(String regionID, World world){
-		this(regionID, world,20L,20L);
+	public OfflinePlayer getOwner(){
+		return owner;
+	}
+	
+	public APRRegion(OfflinePlayer owner, String regionID, World world){
+		this(owner, regionID, world,20L,20L);
 	}
 	
 	public boolean addPoint(long x, long z, long y){
@@ -103,8 +114,19 @@ public class APRRegion {
 		ProtectedPolygonalRegion newWGRegion = new ProtectedPolygonalRegion(wgRegionID, points,
 				(int) allPoints.getMinY(),(int) allPoints.getMaxY());
 		
-		
-		
+		DefaultDomain domain = new DefaultDomain();
+        domain.addPlayer(owner.getName());
+        newWGRegion.setOwners(domain);
+        newWGRegion.setPriority(AutoProtectRegion.config.getInt("defaultRegionSettings.priority"));
+        
+        regionManager.addRegion(newWGRegion);
+        try {
+			regionManager.save();
+		} catch (ProtectionDatabaseException e) {
+			e.printStackTrace();
+			AutoProtectRegion.instance.getServer().getConsoleSender()
+				.sendMessage(ChatColor.RED+"[APR] [ERROR]: "+Translator.translate("failedSaving")+"!");
+		}
 	}
 
 	private void updateWGRegion(ProtectedPolygonalRegion oldWGRegion, RegionManager regionManager) {
@@ -129,8 +151,9 @@ public class APRRegion {
         try {
 			regionManager.save();
 		} catch (ProtectionDatabaseException e) {
-			
-			//TODO ERROR Handling
+			e.printStackTrace();
+			AutoProtectRegion.instance.getServer().getConsoleSender()
+				.sendMessage(ChatColor.RED+"[APR] [ERROR]: "+Translator.translate("failedSaving")+"!");
 		}
 	}
 

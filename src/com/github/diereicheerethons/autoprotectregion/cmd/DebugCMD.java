@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
+import com.github.diereicheerethons.autoprotectregion.Translator;
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegionList;
 import com.github.diereicheerethons.autoprotectregion.players.APRPlayerList;
 import com.github.diereicheerethons.autoprotectregion.util.PluginCommand;
@@ -36,7 +37,7 @@ public class DebugCMD extends PluginCommand {
 
 	@Override
 	public String getCommandHelp() {
-		return "Sends debug info";
+		return Translator.translate("cmdHelp.Debug");
 	}
 
 }

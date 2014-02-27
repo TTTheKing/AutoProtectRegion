@@ -28,7 +28,7 @@ public class BlockPlaceListener implements Listener {
 		
 		ProtectedRegion wgRegion = WGBukkit.getRegionManager(player.getWorld()).getRegionExact(aprRegion.getWgRegionID());
 		if(wgRegion == null){
-			player.sendMessage("[APR]: You stoped editing your region. Did you change the world?");
+			player.sendMessage("[APR]: "+Translator.translate("stoppedEditing"));
 			aprPlayer.setCurrentRegion(null);
 			aprPlayer.setEditingRegion(false);
 			return;

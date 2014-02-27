@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
+import com.github.diereicheerethons.autoprotectregion.Translator;
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion;
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegionList;
 import com.github.diereicheerethons.autoprotectregion.players.APRPlayer;
@@ -46,8 +47,8 @@ public class BuildCMD extends PluginCommand {
 		String regionID = "apr_"+player.getName()+"_"+requiredArgs.get("region-name");
 		APRRegion aprRegion = APRRegionList.get(regionID);
 		if(aprRegion==null){
-			sender.sendMessage("Created new Region");
-			aprRegion = new APRRegion(regionID, player.getWorld(), AutoProtectRegion.config.getLong("maxXWidth"), AutoProtectRegion.config.getLong("maxZWidth"));
+			sender.sendMessage(Translator.translate("newRegion"));
+			aprRegion = new APRRegion(player, regionID, player.getWorld(), AutoProtectRegion.config.getLong("maxXWidth"), AutoProtectRegion.config.getLong("maxZWidth"));
 		}
 		aprPlayer.setCurrentRegion(aprRegion);
 		aprPlayer.setEditingRegion(true);
@@ -57,6 +58,6 @@ public class BuildCMD extends PluginCommand {
 	
 	@Override
 	public String getCommandHelp() {
-		return "start Building";
+		return Translator.translate("cmdHelp.Build");
 	}
 }

@@ -21,16 +21,21 @@ public abstract class PluginConfig {
 	protected JavaPlugin plugin;
 	protected File configFile;
 	protected ConfigList configEntries = new ConfigList();
+	protected String fileName;
 	
-	public PluginConfig(JavaPlugin plugin){
-		this(18000L, plugin); // Default all 15 Mins
+	public PluginConfig(String fileName, JavaPlugin plugin){
+		this(fileName, 18000L, plugin); // Default all 15 Mins
 	} 
 	
+	public PluginConfig(String fileName, boolean shouldSave, JavaPlugin plugin){
+		this(fileName, Long.MAX_VALUE, plugin);
+	}
 	
-	public PluginConfig(long savetime, JavaPlugin plugin){
+	public PluginConfig(String fileName, long savetime, JavaPlugin plugin){
+		this.fileName = fileName;
 		configEntries = new ConfigList();
 		
-		configFile = new File(plugin.getDataFolder(), "config.yml");
+		configFile = new File(plugin.getDataFolder(), fileName);
 		
 		this.saveTimes = savetime;
 		this.plugin=plugin;
@@ -41,7 +46,10 @@ public abstract class PluginConfig {
 			load();
 		}
 		
-		initializeSaver();
+		if(!(savetime == Long.MAX_VALUE))
+			initializeSaver();
+		else
+			save();
 	}
 	
 	protected abstract void setupDefault();
@@ -80,10 +88,15 @@ public abstract class PluginConfig {
 		}
 	}
 	
+	public boolean load(String fileName) {
+		configFile = new File(plugin.getDataFolder(), fileName);
+		return load();
+	}
+	
 	public boolean load() {
 		if(!configExists())
 			return false;
-		setupDefaults();
+		setupDefault();
 		FileConfiguration ymlFile = YamlConfiguration.loadConfiguration(configFile);
 		
 		for(String key: configEntries.keySet()){

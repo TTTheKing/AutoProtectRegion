@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
+import com.github.diereicheerethons.autoprotectregion.Translator;
 import com.github.diereicheerethons.autoprotectregion.util.PluginCommand;
 
 public class ReloadCMD extends PluginCommand {
@@ -32,7 +33,7 @@ public class ReloadCMD extends PluginCommand {
 
 	@Override
 	public String getCommandHelp() {
-		return "Reloads the Data and the Config. Warning you will loose unsaved data. Use /apr save to prevent this!";
+		return Translator.translate("cmdHelp.Reload");
 	}
 
 }

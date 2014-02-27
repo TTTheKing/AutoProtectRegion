@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -46,6 +47,7 @@ public class APRRegionList {
 			ymlFile.set(key + ".maxXWidth", region.getMaxXWidth());
 			ymlFile.set(key + ".maxZWidth", region.getMaxZWidth());
 			ymlFile.set(key + ".worldName", region.getWorld().getName());
+			ymlFile.set(key + ".ownerName", region.getOwner().getName());
 			
 			int pointCounter = 0;
 			for(XZPoint point:region.allPoints){
@@ -79,8 +81,10 @@ public class APRRegionList {
 			
 			String worldName = ymlFile.getString(key + ".worldName");
 			World world = AutoProtectRegion.instance.getServer().getWorld(worldName);
+			String ownerName = ymlFile.getString(key + ".ownerName");
+			OfflinePlayer owner = AutoProtectRegion.instance.getServer().getOfflinePlayer(ownerName);
 			
-			APRRegion region = new APRRegion(key, world, maxXWidth, maxZWidth);
+			APRRegion region = new APRRegion(owner, key, world, maxXWidth, maxZWidth);
 			
 			if(ymlFile.contains(key + ".allPoints")){
 				ConfigurationSection points = ymlFile.getConfigurationSection(key + ".allPoints");

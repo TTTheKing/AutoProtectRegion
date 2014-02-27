@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
+import com.github.diereicheerethons.autoprotectregion.Translator;
 import com.github.diereicheerethons.autoprotectregion.util.PluginCommand;
 
 public class SaveCMD extends PluginCommand {
@@ -32,7 +33,7 @@ public class SaveCMD extends PluginCommand {
 
 	@Override
 	public String getCommandHelp() {
-		return "Saves all Data to Disk";
+		return Translator.translate("cmdHelp.Save");
 	}
 
 }
