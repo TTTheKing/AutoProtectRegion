@@ -28,6 +28,7 @@ public class CommandHandler implements CommandExecutor {
 		cmds.put("debug", new DebugCMD());
 		cmds.put("save", new SaveCMD());
 		cmds.put("delete", new DeleteCMD());
+		cmds.put("showprotection", new ShowProtectionCMD());
 	}
 	
 	

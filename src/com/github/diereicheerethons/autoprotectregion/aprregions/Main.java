@@ -2,6 +2,8 @@ package com.github.diereicheerethons.autoprotectregion.aprregions;
 
 import java.util.ArrayList;
 
+import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion.PointNotInRangeException;
+
 public class Main {
 	public static void main(String[] args) {
 		
@@ -29,12 +31,16 @@ public class Main {
 		
 		printMap(map);
 		
-		APRRegion region = new APRRegion(null, "TEST", null, 20, 20);
+		APRRegion region = new APRRegion(null, "TEST", null, 20, 20, 0);
 		
 		for(int x = 0; x < 20; x++){
 			for(int z = 0; z < 20; z++){
 				if(map[x][z] == 1){
-					region.addPoint(x, z, 0);
+					try {
+						region.addPoint(x, z, 0);
+					} catch (PointNotInRangeException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

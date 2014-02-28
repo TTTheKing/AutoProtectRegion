@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion;
+import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion.PointNotInRangeException;
 import com.github.diereicheerethons.autoprotectregion.players.APRPlayer;
 import com.github.diereicheerethons.autoprotectregion.players.APRPlayerList;
 
@@ -29,13 +30,13 @@ public class BlockPlaceListener implements Listener {
 					ChatColor.RED+Translator.translate("notInSameWorld"));
 		}
 		
-		if(!aprRegion.addPoint(block.getX(), block.getZ(), block.getY())){
+		try {
+			aprRegion.addPoint(block.getX(), block.getZ(), block.getY());
+		} catch (PointNotInRangeException e) {
 			player.sendMessage(ChatColor.GOLD+"[APR]: "+ChatColor.RED+
 					Translator.translate("blockNotInRegionPart1")+
 					aprRegion.getWgRegionID()+
 					Translator.translate("blockNotInRegionPart2"));
 		}
-		
-		
 	}
 }

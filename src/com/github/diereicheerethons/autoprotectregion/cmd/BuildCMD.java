@@ -48,7 +48,10 @@ public class BuildCMD extends PluginCommand {
 		APRRegion aprRegion = APRRegionList.get(regionID);
 		if(aprRegion==null){
 			sender.sendMessage(Translator.translate("newRegion"));
-			aprRegion = new APRRegion(player, regionID, player.getWorld(), AutoProtectRegion.config.getLong("maxXWidth"), AutoProtectRegion.config.getLong("maxZWidth"));
+			aprRegion = new APRRegion(player, regionID, player.getWorld(), 
+					AutoProtectRegion.config.getLong("maxXWidth"), 
+					AutoProtectRegion.config.getLong("maxZWidth"), 
+					AutoProtectRegion.config.getLong("maxYWidth"));
 		}
 		aprPlayer.setCurrentRegion(aprRegion);
 		aprPlayer.setEditingRegion(true);

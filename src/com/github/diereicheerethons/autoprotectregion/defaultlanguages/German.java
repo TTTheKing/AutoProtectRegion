@@ -21,6 +21,7 @@ public class German extends PluginConfig{
 		set("cmdHelp.Delete", "Loescht Region", String.class);
 		set("cmdHelp.Reload", "Laed die Daten und die Config neu. Achtung du verlierst alle ungespeicherten Daten. Nutze /apr save um dies zu vermeiden!", String.class);
 		set("cmdHelp.Save", "Speichert alle daten auf das File System", String.class);
+		set("cmdHelp.ShowProtection", "Zeigt die Region an", String.class);
 		set("doItAsPlayer", "Das kannst du nur als Spieler tun!", String.class);
 		set("noWorldGuard", "WorldGuard fehlt", String.class);
 		set("newRegion", "Neue Region erstellt", String.class);
@@ -30,6 +31,7 @@ public class German extends PluginConfig{
 		set("blockNotInRegionPart1", "Block wurde nicht zu deiner Region: ", String.class);
 		set("blockNotInRegionPart1", " hinzugefuegt. Zu weit weg? Nutze /apr build cancel um das bauen an der Region zu beenden.", String.class);
 		set("notInSameWorld", "Du hast aufgehoert deine Region zu bearbeiten, weil du die Welt gewechselt hast.", String.class);
+		set("defineOrSelectRegion", "Bitte waehle eine Region aus, oder gib den Namen an.", String.class);
 	}
 	
 }

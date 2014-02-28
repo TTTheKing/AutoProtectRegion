@@ -17,5 +17,6 @@ public class Config extends PluginConfig{
 		set("maxZWidth", new Long(20), Long.class);
 		set("defaultRegionSettings.priority", new Integer(13), Integer.class);
 		set("language", new String("en"), String.class);
+		set("calculationVersion", new Integer(1), Integer.class);
 	}
 }

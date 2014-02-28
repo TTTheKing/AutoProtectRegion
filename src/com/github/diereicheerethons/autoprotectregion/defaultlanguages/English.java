@@ -21,6 +21,7 @@ public class English extends PluginConfig{
 		set("cmdHelp.Delete", "delete region", String.class);
 		set("cmdHelp.Reload", "Reloads the Data and the Config. Warning you will loose unsaved data. Use /apr save to prevent this!", String.class);
 		set("cmdHelp.Save", "Saves all Data to Disk", String.class);
+		set("cmdHelp.ShowProtection", "Shows the protection for a region", String.class);
 		set("doItAsPlayer", "This should be done as Player!", String.class);
 		set("noWorldGuard", "WorldGuard is missing", String.class);
 		set("newRegion", "Created new Region", String.class);
@@ -30,5 +31,6 @@ public class English extends PluginConfig{
 		set("blockNotInRegionPart1", "This Block hasn't been added to your Region: ", String.class);
 		set("blockNotInRegionPart1", ". Are you too far away? Use /apr build cancel to stop Building your Region.", String.class);
 		set("notInSameWorld", "You stopped building in your Region, due to changing the world.", String.class);
+		set("defineOrSelectRegion", "Please select a region, or enter the regions Name.", String.class);
 	}
 }

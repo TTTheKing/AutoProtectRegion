@@ -85,13 +85,14 @@ public class APRRegionList {
 		for(String key: keys){
 			long maxXWidth = ymlFile.getLong(key + ".maxXWidth");
 			long maxZWidth = ymlFile.getLong(key + ".maxZWidth");
+			long maxYWidth = ymlFile.getLong(key + ".maxYWidth");
 			
 			String worldName = ymlFile.getString(key + ".worldName");
 			World world = AutoProtectRegion.instance.getServer().getWorld(worldName);
 			String ownerName = ymlFile.getString(key + ".ownerName");
 			OfflinePlayer owner = AutoProtectRegion.instance.getServer().getOfflinePlayer(ownerName);
 			
-			APRRegion region = new APRRegion(owner, key, world, maxXWidth, maxZWidth);
+			APRRegion region = new APRRegion(owner, key, world, maxXWidth, maxZWidth, maxYWidth);
 			
 			if(ymlFile.contains(key + ".allPoints")){
 				ConfigurationSection points = ymlFile.getConfigurationSection(key + ".allPoints");

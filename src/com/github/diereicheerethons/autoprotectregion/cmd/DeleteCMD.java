@@ -78,13 +78,7 @@ public class DeleteCMD extends PluginCommand {
 		World world = player.getWorld();
 		String playerName = player.getName();
 		
-		RegionManager regionManager = WGBukkit.getRegionManager(world);
-		String regionName = "apr_"+playerName+"_"+requiredArgs.get("region-name");
-		regionManager.removeRegion(regionName);
-		APRRegionList.remove(regionName);
-		APRPlayer aprPlayer = APRPlayerList.getOrCreateAPRPlayer(player);
-		aprPlayer.setCurrentRegion(null);
-		aprPlayer.setEditingRegion(false);
+		remove(requiredArgs, player, playerName, world);
 		
 		return true;
 	}
@@ -111,17 +105,22 @@ public class DeleteCMD extends PluginCommand {
 		else
 			worldName = player.getWorld().getName();
 		String playerName = unreqArgs.get("otherPlayer");
+		World world = APR.instance.getServer().getWorld(worldName);
 		
-		RegionManager regionManager = WGBukkit.getRegionManager(APR.instance.getServer().getWorld(worldName));
+		remove(requiredArgs, player, playerName, world);
 		
+		return true;
+	}
+
+	private void remove(HashMap<String, String> requiredArgs, Player player,
+			String playerName, World world) {
+		RegionManager regionManager = WGBukkit.getRegionManager(world);
 		String regionName = "apr_"+playerName+"_"+requiredArgs.get("region-name");
 		regionManager.removeRegion(regionName);
 		APRRegionList.remove(regionName);
 		APRPlayer aprPlayer = APRPlayerList.getOrCreateAPRPlayer(player);
 		aprPlayer.setCurrentRegion(null);
 		aprPlayer.setEditingRegion(false);
-		
-		return true;
 	}
 
 	@Override
