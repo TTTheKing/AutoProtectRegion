@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
+import com.github.diereicheerethons.autoprotectregion.APR;
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
 import com.github.diereicheerethons.autoprotectregion.Translator;
 import com.sk89q.worldedit.BlockVector2D;
@@ -21,6 +22,7 @@ public class APRRegion {
 	
 	private long maxXWidth = 20;
 	private long maxZWidth = 20;
+	private long maxYWidth = 15;
 	
 	private String wgRegionID;
 	private World world = null;
@@ -32,12 +34,13 @@ public class APRRegion {
 	ArrayPointList allBorderPointsSorted = new ArrayPointList();
 	ArrayPointList edgePointsSorted = new ArrayPointList();
 	
-	public APRRegion(OfflinePlayer owner, String regionID, World world, long maxXWidth, long maxZWidth){
+	public APRRegion(OfflinePlayer owner, String regionID, World world, long maxXWidth, long maxZWidth, long maxYWidth){
 		this.maxXWidth=maxXWidth;
 		this.maxZWidth=maxZWidth;
 		this.wgRegionID = regionID;
 		this.world = world;
 		this.owner = owner;
+		this.maxYWidth = maxYWidth;
 		APRRegionList.list.add(this);
 	}
 	
@@ -46,18 +49,32 @@ public class APRRegion {
 	}
 	
 	public APRRegion(OfflinePlayer owner, String regionID, World world){
-		this(owner, regionID, world,20L,20L);
+		this(owner, regionID, world,20L,20L,15L);
 	}
 	
-	public boolean addPoint(long x, long z, long y){
+	public boolean addPoint(long x, long z, long y) throws PointNotInRangeException{
 		return addPoint(new XZPoint(x,z,y), y);
 	}
 	
-	public boolean addPoint(XZPoint point, long y){
-		if(!pointInRange(point))
-			return false;
+	public class PointNotInRangeException extends Exception{
+		private static final long serialVersionUID = 1L;
+
+		public PointNotInRangeException(String text){
+			super(text);
+		}
+		
+	}
+	
+	public boolean addPoint(XZPoint point, long y) throws PointNotInRangeException{
+		if(!pointInRange(point, y))
+			throw new PointNotInRangeException(point.getX()+","+y+","+point.getZ());
 		if(allPoints.addPoint(point))	
-			return recalculateLists();
+			if(APR.config.getInt("calculationVersion") == 2){
+				return recalculateListsV2();
+			}else if(APR.config.getInt("calculationVersion") == 3){
+				return recalculateLists();
+			}else
+				return recalculateLists();
 		else
 			allPoints.getPointAt(point.getX(), point.getZ()).setY(y);
 		return false;
@@ -65,7 +82,7 @@ public class APRRegion {
 	
 	
 	
-	private boolean pointInRange(XZPoint point) {
+	private boolean pointInRange(XZPoint point, long y) {
 		if(allPoints.size() == 0)
 			return true;
 		if(Math.abs(allPoints.getBiggestX() - point.getX()) > maxXWidth)
@@ -76,6 +93,10 @@ public class APRRegion {
 			return false;
 		if(Math.abs(allPoints.getBiggestZ() - point.getZ()) > maxZWidth)
 			return false;
+		if(Math.abs(allPoints.getMaxY() - y) > maxYWidth)
+			return false;
+		if(Math.abs(allPoints.getMinY() - y) > maxYWidth)
+			return false;
 		return true;
 	}
 
@@ -83,6 +104,16 @@ public class APRRegion {
 		resetCalcLists();
 		calculateBorderPoints();
 		sortBorderPoints();
+		filterBorderPoints();
+		
+		updateOrCreateWGRegion();
+		return true;
+	}
+	
+	protected boolean recalculateListsV2() {
+		resetCalcLists();
+		calculateBorderPoints();
+		sortBorderPointsV2();
 		filterBorderPoints();
 		
 		updateOrCreateWGRegion();
@@ -225,6 +256,47 @@ public class APRRegion {
 		}
 	}
 
+	private void sortBorderPointsV2() {
+		long biggestX = allBorderPoints.getBiggestX();
+		long biggestZ = allBorderPoints.getBiggestZ();
+		long smallestX = allBorderPoints.getSmallestX();
+		long smallestZ = allBorderPoints.getSmallestZ();
+		
+		long middleX = Math.round((biggestX - smallestX) / 2.0);
+		long middleZ = Math.round((biggestZ - smallestZ) / 2.0);
+		
+		ArrayPointList tmpallBorderPoints = new ArrayPointList();
+		for(XZPoint point: allBorderPoints){
+			tmpallBorderPoints.add(point);
+		}
+		
+		while(tmpallBorderPoints.size()>0){
+			double maxAngle = Double.MIN_VALUE;
+			ArrayPointList maxAnglePoints = new ArrayPointList();
+			for(XZPoint point: tmpallBorderPoints){
+				double deltaZ = middleZ - point.getZ();
+				double deltaX = middleX - point.getX();
+				double angle = Math.atan2(deltaZ, deltaX) * 180 / Math.PI;
+				
+				if(angle > maxAngle){
+					maxAngle = angle;
+					maxAnglePoints = new ArrayPointList();
+					maxAnglePoints.add(point);
+				}
+				if(angle == maxAngle){
+					maxAnglePoints.add(point);
+				}
+			}
+			
+			for(XZPoint point: maxAnglePoints){
+				long x = point.getX();
+				long z = point.getZ();
+				allBorderPointsSorted.addPoint(allBorderPoints.getPointAt(x, z));
+				tmpallBorderPoints.remove(maxAnglePoints.getPointAt(x, z));
+			}
+		}
+	}
+	
 	private void filterBorderPoints() {
 		// TODO Implement This!!!!
 		for(XZPoint point: allBorderPointsSorted){
@@ -276,6 +348,14 @@ public class APRRegion {
 
 	public void setMaxZWidth(long maxZWidth) {
 		this.maxZWidth = maxZWidth;
+	}
+	
+	public long getMaxYWidth() {
+		return maxYWidth;
+	}
+
+	public void setMaxYWidth(long maxYWidth) {
+		this.maxYWidth = maxYWidth;
 	}
 	
 
