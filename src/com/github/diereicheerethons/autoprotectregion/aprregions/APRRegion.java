@@ -205,6 +205,7 @@ public class APRRegion {
         domain.addPlayer(owner.getName());
         newWGRegion.setOwners(domain);
         newWGRegion.setPriority(AutoProtectRegion.config.getInt("defaultRegionSettings.priority"));
+        newWGRegion.setFlags(APR.config.getDefaultRegionFlags(world));
         
         regionManager.addRegion(newWGRegion);
         try {

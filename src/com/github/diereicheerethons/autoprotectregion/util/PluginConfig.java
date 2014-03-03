@@ -125,6 +125,8 @@ public abstract class PluginConfig {
 					configEntries.put(key, ymlFile.getVector(key));
 				}else if(type == List.class){
 					configEntries.put(key, ymlFile.getList(key));
+				}else if(type == Map.class){
+					configEntries.put(key, ymlFile.getMapList(key));
 				}else{
 					configEntries.put(key, ymlFile.get(key));
 				}
