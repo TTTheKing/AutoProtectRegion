@@ -29,9 +29,13 @@ public class German extends PluginConfig{
 		set("noPermissionsDeleteOthers", "Keine Berechtigung für den Command \"delete\" bei anderen Spielern!", String.class);
 		set("noWorldName", "Bitte gib einen Weltnamen an.", String.class);
 		set("blockNotInRegionPart1", "Block wurde nicht zu deiner Region: ", String.class);
-		set("blockNotInRegionPart1", " hinzugefuegt. Zu weit weg? Nutze /apr build cancel um das bauen an der Region zu beenden.", String.class);
+		set("blockNotInRegionPart2", " hinzugefuegt. Zu weit weg? Nutze /apr build cancel um das bauen an der Region zu beenden.", String.class);
 		set("notInSameWorld", "Du hast aufgehoert deine Region zu bearbeiten, weil du die Welt gewechselt hast.", String.class);
 		set("defineOrSelectRegion", "Bitte waehle eine Region aus, oder gib den Namen an.", String.class);
+		set("playerNotFound", "Kein Spieler mit diesem Namen gefunden.", String.class);
+		set("regionNotFound", "Keine Region gefunden.", String.class);
+		set("cantBuildInThisRegion", "Du kannst hier nichts bearbeiten.", String.class);
+		set("canOnlyBuildInSomeRegions", "Du kannst nur in einigen Regionen bearbeiten. Aber nicht hier.", String.class);
 	}
 	
 }

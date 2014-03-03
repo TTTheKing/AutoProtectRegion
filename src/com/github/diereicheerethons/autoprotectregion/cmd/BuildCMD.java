@@ -22,6 +22,8 @@ public class BuildCMD extends PluginCommand {
 		super.command    = "build";
 		super.permission = "apr.build";
 		super.senderType = "player";
+		super.aliases.add("create");
+		super.aliases.add("edit");
 	}
 	
 	@Override

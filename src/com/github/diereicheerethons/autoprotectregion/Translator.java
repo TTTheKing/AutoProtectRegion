@@ -38,9 +38,13 @@ public class Translator extends PluginConfig {
 		set("noPermissionsDeleteOthers", "No permissions for the command \"delete\" on other players!", String.class);
 		set("noWorldName", "Please define a world name.", String.class);
 		set("blockNotInRegionPart1", "This Block hasn't been added to your Region: ", String.class);
-		set("blockNotInRegionPart1", ". Are you too far away? Use /apr build cancel to stop Building your Region.", String.class);
+		set("blockNotInRegionPart2", ". Are you too far away? Use /apr build cancel to stop Building your Region.", String.class);
 		set("notInSameWorld", "You stopped building in your Region, due to changing the world.", String.class);
 		set("defineOrSelectRegion", "Please select a region, or enter the regions Name.", String.class);
+		set("playerNotFound", "No player found for this name.", String.class);
+		set("regionNotFound", "No region found.", String.class);
+		set("cantBuildInThisRegion", "You cant protect anything in this region.", String.class);
+		set("canOnlyBuildInSomeRegions", "You can only protect in some regions. Not here", String.class);
 	}
 
 }

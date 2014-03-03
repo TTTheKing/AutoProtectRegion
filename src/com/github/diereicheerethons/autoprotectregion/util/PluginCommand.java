@@ -3,6 +3,7 @@ package com.github.diereicheerethons.autoprotectregion.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import net.milkbowl.vault.permission.Permission;
 
@@ -19,9 +20,16 @@ public abstract class PluginCommand {
 	private static String pluginCommand;
 	private static String pluginShortName;
 	
+	public static HashMap<String, PluginCommand> aliasCMDMap = new HashMap<String, PluginCommand>();
+	
 	protected String command;
 	protected String permission;
 	protected String senderType;
+	protected List<String> aliases = new ArrayList<String>();
+	
+	public List<String> getAliases(){
+		return aliases;
+	}
 	
 	public abstract void setUp();
 	
@@ -29,6 +37,10 @@ public abstract class PluginCommand {
 	
 	protected PluginCommand(){
 		setUp();
+		aliasCMDMap.put(command, this);
+		for(String alias:aliases){
+			aliasCMDMap.put(alias, this);
+		}
 		setArguments();
 	}
 	
@@ -56,7 +68,7 @@ public abstract class PluginCommand {
 				return false;
 			}
 		}
-		if(!this.command.equalsIgnoreCase(cmd)){
+		if(!(this.command.equalsIgnoreCase(cmd) || this.aliases.contains(cmd))){
 			sender.sendMessage(ChatColor.RED+"["+pluginShortName+"]: Failure in Plugin! Please report this to an Admin!");
 			return false;
 		}
@@ -121,7 +133,21 @@ public abstract class PluginCommand {
 			}
 		}
 		
-		return helpText +ChatColor.YELLOW+ "- " + getCommandHelp();
+		String aliasString = "";
+		int size = aliases.size();
+		if(size>0)
+			aliasString = " (";
+		int counter = 0;
+		for(String alias:aliases){
+			counter++;
+			aliasString += alias.replace(".", " ");
+			
+			if(counter < size)
+				aliasString += "/";
+		}
+		if(size>0)
+			aliasString += ")";
+		return helpText +ChatColor.GREEN + aliasString + ChatColor.YELLOW+ "- " + getCommandHelp();
 	}
 	
 	public String getPermission(){

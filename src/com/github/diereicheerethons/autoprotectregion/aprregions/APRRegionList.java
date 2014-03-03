@@ -3,6 +3,7 @@ package com.github.diereicheerethons.autoprotectregion.aprregions;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.OfflinePlayer;
@@ -12,6 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.github.diereicheerethons.autoprotectregion.APR;
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
 
 public class APRRegionList {
@@ -67,6 +69,12 @@ public class APRRegionList {
 				ymlFile.set(key + ".allPoints."+pointCounter+".maxY", point.getMaxY());
 			}
 			
+			List<String> inviteNames = new ArrayList<String>();
+			for(OfflinePlayer player:region.getInvites()){
+				inviteNames.add(player.getName());
+			}
+			
+			ymlFile.set(key+ ".invites", inviteNames);
 		}
 		
 		try {
@@ -107,6 +115,14 @@ public class APRRegionList {
 					region.allPoints.addLoaded(new XZPoint(x,z,maxY,minY));
 				}
 				region.recalculateLists();
+			}
+			
+			if(ymlFile.contains(key + ".invites")){
+				List<String> inviteNames = ymlFile.getStringList(key + ".invites");
+				for(String name:inviteNames){
+					OfflinePlayer player = APR.instance.getServer().getOfflinePlayer(name);
+					region.getInvites().add(player);
+				}
 			}
 		}
 		

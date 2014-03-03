@@ -8,7 +8,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion;
+import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion.PointInBlacklistException;
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion.PointNotInRangeException;
+import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion.PointNotInWhitelistException;
 import com.github.diereicheerethons.autoprotectregion.players.APRPlayer;
 import com.github.diereicheerethons.autoprotectregion.players.APRPlayerList;
 
@@ -37,6 +39,10 @@ public class BlockPlaceListener implements Listener {
 					Translator.translate("blockNotInRegionPart1")+
 					aprRegion.getWgRegionID()+
 					Translator.translate("blockNotInRegionPart2"));
+		} catch (PointInBlacklistException e) {
+			player.sendMessage(ChatColor.GOLD+"[APR]: "+ChatColor.RED+ Translator.translate("cantBuildInThisRegion"));
+		} catch (PointNotInWhitelistException e) {
+			player.sendMessage(ChatColor.GOLD+"[APR]: "+ChatColor.RED+ Translator.translate("canOnlyBuildInSomeRegions"));
 		}
 	}
 }

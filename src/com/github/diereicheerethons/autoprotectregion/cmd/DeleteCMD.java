@@ -27,6 +27,8 @@ public class DeleteCMD extends PluginCommand {
 		super.command    = "delete";
 		super.permission = "apr.delete";
 		super.senderType = "player and console";
+		super.aliases.add("remove");
+		super.aliases.add("del");
 	}
 
 	@Override

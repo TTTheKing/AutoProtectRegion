@@ -123,6 +123,8 @@ public abstract class PluginConfig {
 					configEntries.put(key, ymlFile.getOfflinePlayer(key));
 				}else if(type == Vector.class){
 					configEntries.put(key, ymlFile.getVector(key));
+				}else if(type == List.class){
+					configEntries.put(key, ymlFile.getList(key));
 				}else{
 					configEntries.put(key, ymlFile.get(key));
 				}

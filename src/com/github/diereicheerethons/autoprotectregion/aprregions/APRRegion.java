@@ -16,6 +16,7 @@ import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion.CircularInheritanceException;
 
 public class APRRegion {
@@ -28,13 +29,15 @@ public class APRRegion {
 	private World world = null;
 	private OfflinePlayer owner;
 	
+	private ArrayList<OfflinePlayer> invites = new ArrayList<OfflinePlayer>();
 	
 	ArrayPointList allPoints = new ArrayPointList();
 	ArrayPointList allBorderPoints = new ArrayPointList();
 	ArrayPointList allBorderPointsSorted = new ArrayPointList();
 	ArrayPointList edgePointsSorted = new ArrayPointList();
 	
-	public APRRegion(OfflinePlayer owner, String regionID, World world, long maxXWidth, long maxZWidth, long maxYWidth){
+	public APRRegion(OfflinePlayer owner, String regionID, World world, long maxXWidth,
+				long maxZWidth, long maxYWidth){
 		this.maxXWidth=maxXWidth;
 		this.maxZWidth=maxZWidth;
 		this.wgRegionID = regionID;
@@ -52,7 +55,8 @@ public class APRRegion {
 		this(owner, regionID, world,20L,20L,15L);
 	}
 	
-	public boolean addPoint(long x, long z, long y) throws PointNotInRangeException{
+	public boolean addPoint(long x, long z, long y) throws PointNotInRangeException, 
+				PointInBlacklistException, PointNotInWhitelistException{
 		return addPoint(new XZPoint(x,z,y), y);
 	}
 	
@@ -64,10 +68,31 @@ public class APRRegion {
 		}
 		
 	}
+	public class PointInBlacklistException extends Exception{
+		private static final long serialVersionUID = 1L;
+
+		public PointInBlacklistException(String text){
+			super(text);
+		}
+		
+	}
+	public class PointNotInWhitelistException extends Exception{
+		private static final long serialVersionUID = 1L;
+
+		public PointNotInWhitelistException(String text){
+			super(text);
+		}
+		
+	}
 	
-	public boolean addPoint(XZPoint point, long y) throws PointNotInRangeException{
+	public boolean addPoint(XZPoint point, long y) throws PointNotInRangeException, 
+				PointInBlacklistException, PointNotInWhitelistException{
 		if(!pointInRange(point, y))
 			throw new PointNotInRangeException(point.getX()+","+y+","+point.getZ());
+		if(pointInBlacklist(point,y))
+			throw new PointInBlacklistException(point.getX()+","+y+","+point.getZ());
+		if(!pointInWhitelist(point,y))
+			throw new PointNotInWhitelistException(point.getX()+","+y+","+point.getZ());
 		if(allPoints.addPoint(point))	
 			if(APR.config.getInt("calculationVersion") == 2){
 				return recalculateListsV2();
@@ -80,8 +105,39 @@ public class APRRegion {
 		return false;
 	}
 	
-	
-	
+	private boolean pointInWhitelist(XZPoint point, long y) {
+		if(APR.config.getStringList("wgRegionWhitelist").isEmpty()) // Assuming everithing is the whitelist
+			return true;
+		List<String> whiteList = APR.config.getStringList("wgRegionWhitelist");
+		return pointInList(point, y, whiteList);
+	}
+
+	private boolean pointInBlacklist(XZPoint point, long y) {
+		if(APR.config.getStringList("wgRegionBlacklist").isEmpty())
+			return false;
+		List<String> blacklist = APR.config.getStringList("wgRegionBlacklist");
+		return pointInList(point, y, blacklist);
+	}
+
+	public boolean pointInList(XZPoint point, long y, List<String> list) {
+		RegionManager regionManager = WGBukkit.getRegionManager(world);
+		
+		long x = point.getX();
+		long z = point.getZ();
+		
+		for(String rgName:list){
+			ProtectedRegion region = regionManager.getRegionExact(rgName);
+			if(region == null){
+				continue;
+			}
+			if(region.contains((int) x, (int) y, (int) z)){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	private boolean pointInRange(XZPoint point, long y) {
 		if(allPoints.size() == 0)
 			return true;
@@ -369,6 +425,10 @@ public class APRRegion {
 	
 	public World getWorld(){
 		return world;
+	}
+
+	public ArrayList<OfflinePlayer> getInvites() {
+		return invites;
 	}
 	
 }

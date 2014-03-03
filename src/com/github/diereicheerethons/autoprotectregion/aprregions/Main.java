@@ -2,7 +2,9 @@ package com.github.diereicheerethons.autoprotectregion.aprregions;
 
 import java.util.ArrayList;
 
+import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion.PointInBlacklistException;
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion.PointNotInRangeException;
+import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion.PointNotInWhitelistException;
 
 public class Main {
 	public static void main(String[] args) {
@@ -39,6 +41,10 @@ public class Main {
 					try {
 						region.addPoint(x, z, 0);
 					} catch (PointNotInRangeException e) {
+						e.printStackTrace();
+					} catch (PointInBlacklistException e) {
+						e.printStackTrace();
+					} catch (PointNotInWhitelistException e) {
 						e.printStackTrace();
 					}
 				}

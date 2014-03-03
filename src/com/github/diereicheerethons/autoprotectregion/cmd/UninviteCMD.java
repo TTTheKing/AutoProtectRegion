@@ -4,46 +4,46 @@ import java.util.HashMap;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.github.diereicheerethons.autoprotectregion.Translator;
-import com.github.diereicheerethons.autoprotectregion.players.APRPlayer;
-import com.github.diereicheerethons.autoprotectregion.players.APRPlayerList;
 import com.github.diereicheerethons.autoprotectregion.util.PluginCommand;
+import com.github.diereicheerethons.autoprotectregion.util.PluginCommandArgument;
 
-public class BuildCancelCMD extends PluginCommand {
+public class UninviteCMD extends PluginCommand {
 
 	@Override
 	public void setUp() {
-		super.command    = "build.cancel";
-		super.permission = "apr.build.cancel";
+		super.command    = "uninvite";
+		super.permission = "apr.invite";
 		super.senderType = "player";
-		super.aliases.add("create.cancel");
-		super.aliases.add("edit.cancel");
 	}
 
 	@Override
 	public void setArguments() {
-		return;
+		new PluginCommandArgument("region-name", this){
+			public void setUpProperties() {
+				properties.put("required", true);
+			}
+		};
+		
+		new PluginCommandArgument("player-name", this){
+			public void setUpProperties() {
+				properties.put("required", true);
+			}
+		};
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command,
 			HashMap<String, String> requiredArgs,
 			HashMap<String, String> unreqArgs, String[] otherArgs) {
-		
-		Player player = (Player) sender;
-		APRPlayer aprPlayer = APRPlayerList.getOrCreateAPRPlayer(player);
-		
-		aprPlayer.setCurrentRegion(null);
-		aprPlayer.setEditingRegion(false);
-		
-		return true;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public String getCommandHelp() {
-		return Translator.translate("cmdHelp.BuildCancel");
+		return Translator.translate("cmdHelp.Uninvite");
 	}
 
 }

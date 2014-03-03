@@ -14,7 +14,7 @@ import com.github.diereicheerethons.autoprotectregion.util.PluginCommand;
 
 public class CommandHandler implements CommandExecutor {
 	
-	private HashMap<String, PluginCommand> cmds = new HashMap<String, PluginCommand>();
+	private HashMap<String, PluginCommand> cmds = PluginCommand.aliasCMDMap;
 	
 	public CommandHandler(){
 		PluginCommand.setPermissionsHandler(AutoProtectRegion.permission);
@@ -22,13 +22,16 @@ public class CommandHandler implements CommandExecutor {
 		PluginCommand.setPluginCommand("autoprotectregion");
 		PluginCommand.setPluginShortName("APR");
 		
-		cmds.put("build.cancel", new BuildCancelCMD());
-		cmds.put("build", new BuildCMD());
-		cmds.put("reload", new ReloadCMD());
-		cmds.put("debug", new DebugCMD());
-		cmds.put("save", new SaveCMD());
-		cmds.put("delete", new DeleteCMD());
-		cmds.put("showprotection", new ShowProtectionCMD());
+		new BuildCancelCMD();
+		new BuildCMD();
+		new ReloadCMD();
+		new DebugCMD();
+		new SaveCMD();
+		new DeleteCMD();
+		new ShowProtectionCMD();
+		new ShowOthersProtectionCMD();
+		new InviteCMD();
+		new UninviteCMD();
 	}
 	
 	
@@ -67,6 +70,8 @@ public class CommandHandler implements CommandExecutor {
 		
 		for(String key:cmds.keySet()){
 			PluginCommand cmd = cmds.get(key);
+			if(cmd.getAliases().contains(key))
+				continue;
 			if(isPlayer)
 				if(!AutoProtectRegion.permission.playerHas((Player) sender, cmd.getPermission()))
 					continue;
