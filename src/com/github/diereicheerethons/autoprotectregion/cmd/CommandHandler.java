@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.diereicheerethons.autoprotectregion.APR;
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
 import com.github.diereicheerethons.autoprotectregion.util.PluginCommand;
 
@@ -21,6 +22,7 @@ public class CommandHandler implements CommandExecutor {
 		PluginCommand.setPlugin(AutoProtectRegion.instance);
 		PluginCommand.setPluginCommand("autoprotectregion");
 		PluginCommand.setPluginShortName("APR");
+		PluginCommand.setTranslator(APR.language);
 		
 		new BuildCancelCMD();
 		new BuildCMD();

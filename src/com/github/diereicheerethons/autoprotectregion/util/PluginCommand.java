@@ -19,6 +19,7 @@ public abstract class PluginCommand {
 	private static Permission permissionsHandler;
 	private static String pluginCommand;
 	private static String pluginShortName;
+	private static PluginConfig translator;
 	
 	public static HashMap<String, PluginCommand> aliasCMDMap = new HashMap<String, PluginCommand>();
 	
@@ -51,38 +52,74 @@ public abstract class PluginCommand {
 	public boolean onPluginCommand(CommandSender sender, Command command, String cmd, String[] args){
 		if (sender instanceof Player){
 			if(!senderType.toLowerCase().contains("player")){
-				sender.sendMessage(ChatColor.RED+"["+pluginShortName+"]: Command \""+cmd+"\" must be executed from the Console!");
+				sendErrorMSG(sender, "PluginCommand.mustBeExecutedFromConsole",
+						"Command must be executed from the Console!");
 				return false;
 			}
 			
 			Player player = (Player) sender;
 			if((!permissionsHandler.playerHas(player, permission)) || (!player.isOp())){
-				sender.sendMessage(ChatColor.RED+"["+pluginShortName+"]: No permissions for the command \""+cmd+"\"!");
+				sendErrorMSG(sender, "PluginCommand.noPermissionsForCMD", 
+						"No permissions for this command!");
 				return false;
 			}
-			
-			
 		} else {
 			if(!senderType.toLowerCase().contains("console")){
-				sender.sendMessage(ChatColor.RED+"["+pluginShortName+"]: Command \""+cmd+"\" must be executed as Player!");
+				sendErrorMSG(sender, "PluginCommand.mustBeExecutedAsPlayer",
+						"Command must be executed as Player!");
 				return false;
 			}
 		}
 		if(!(this.command.equalsIgnoreCase(cmd) || this.aliases.contains(cmd))){
-			sender.sendMessage(ChatColor.RED+"["+pluginShortName+"]: Failure in Plugin! Please report this to an Admin!");
+			sendErrorMSG(sender, "PluginCommand.failureInPlugin",
+					"Failure in Plugin! Please report this to an Admin!");
 			return false;
 		}
-		
-		
 		
 		HashMap<String, String> requiredArgs = new HashMap<String, String>();
 		HashMap<String, String> unreqArgs = new HashMap<String, String>();
 		String[] otherArgs = null;
 		sortArgs(args, requiredArgs, unreqArgs, otherArgs);
 		
+		if(!containingAllReqArgs(requiredArgs)){
+			sendErrorMSG(sender, "PluginCommand.notAllrequiredArguments",
+					"Please provide all required arguments");
+			sender.sendMessage(this.getPluginCommandHelp());
+			return false;
+		}
+		
 		return onCommand(sender, command, requiredArgs, unreqArgs, otherArgs);
 	}
 	
+	private void sendErrorMSG(CommandSender sender, String translatorKey, String defaultString){
+		if(translator == null)
+			sender.sendMessage(ChatColor.RED+"["+pluginShortName+"]: "+defaultString);
+		else
+			if(translator.getString(translatorKey) == null)
+				sender.sendMessage(ChatColor.RED+"["+pluginShortName+"]: "+defaultString);
+			else
+				sender.sendMessage(ChatColor.RED+"["+pluginShortName+"]: "+translator.getString(translatorKey));
+	}
+	
+	private boolean containingAllReqArgs(HashMap<String, String> requiredArgs) {
+		ArrayList<PluginCommandArgument> cmdArgs = PluginCommandArgument.getPluginCmdArgs(this);
+		if(cmdArgs != null){
+			for(PluginCommandArgument arg: cmdArgs){
+				boolean required;
+				if(arg.getProperties().get("required")!=null)
+					required = (Boolean) arg.getProperties().get("required");
+				else
+					required = false;
+				if(required){
+					if(!requiredArgs.containsKey(arg.getArgumentName())){
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 	private void sortArgs(String[] args, HashMap<String, String> requiredArgs,
 			HashMap<String, String> unreqArgs, String[] otherArgs) {
 		int argsCounter = 0;
@@ -178,6 +215,10 @@ public abstract class PluginCommand {
 
 	public static void setPluginCommand(String pluginCommand) {
 		PluginCommand.pluginCommand = pluginCommand;
+	}
+
+	public static void setTranslator(PluginConfig translator) {
+		PluginCommand.translator = translator;
 	}
 	
 }
