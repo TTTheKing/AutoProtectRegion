@@ -102,16 +102,15 @@ public class APRRegion {
 		if (!pointInWhitelist(point, y))
 			throw new PointNotInWhitelistException(point.getX() + "," + y + ","
 					+ point.getZ());
-		if (allPoints.addPoint(point))
-			if (APR.config.getInt("calculationVersion") == 2) {
-				return recalculateListsV2();
-			} else if (APR.config.getInt("calculationVersion") == 3) {
-				return recalculateLists();
-			} else
-				return recalculateLists();
-		else
+		if (!allPoints.addPoint(point))
 			allPoints.getPointAt(point.getX(), point.getZ()).setY(y);
-		return false;
+			
+		if (APR.config.getInt("calculationVersion") == 2) {
+			return recalculateListsV2();
+		} else if (APR.config.getInt("calculationVersion") == 3) {
+			return recalculateLists();
+		} else
+			return recalculateLists();
 	}
 
 	private boolean pointInWhitelist(XZPoint point, long y) {

@@ -26,6 +26,7 @@ public class CommandHandler implements CommandExecutor {
 		
 		new BuildCancelCMD();
 		new BuildCMD();
+		new BuildOtherCMD();
 		new ReloadCMD();
 		new DebugCMD();
 		new SaveCMD();
