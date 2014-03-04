@@ -81,16 +81,28 @@ public class Config extends PluginConfig{
 			if(flag instanceof StateFlag){
 				flags.put(flag, ((StateFlag) flag).unmarshal(getBoolean(flagsKey+flag.getName())));
 			}else if(flag instanceof IntegerFlag){
-				flags.put(flag, ((IntegerFlag) flag).unmarshal(getInt(flagsKey+flag.getName())));
+				Integer i = getInt(flagsKey+flag.getName());
+				if(i == 0)
+					continue;
+				flags.put(flag, ((IntegerFlag) flag).unmarshal(i));
 			}else if(flag instanceof BooleanFlag){
-				flags.put(flag, ((BooleanFlag) flag).unmarshal(getBoolean(flagsKey+flag.getName())));
+				Boolean b = getBoolean(flagsKey+flag.getName());
+				flags.put(flag, ((BooleanFlag) flag).unmarshal(b));
 			}else if(flag instanceof StringFlag){
-				flags.put(flag, ((StringFlag) flag).unmarshal(getString(flagsKey+flag.getName())));
+				String s = getString(flagsKey+flag.getName());
+				if(s.equalsIgnoreCase(""))
+					continue;
+				flags.put(flag, ((StringFlag) flag).unmarshal(s));
 			}else if(flag instanceof SetFlag<?>){
 				List<String> list = getStringList(flagsKey+flag.getName());
+				if(list.isEmpty())
+					continue;
 				flags.put(flag, ((SetFlag<?>) flag).unmarshal(list));
 			}else if(flag instanceof DoubleFlag){
-				flags.put(flag, ((DoubleFlag) flag).unmarshal(getDouble(flagsKey+flag.getName())));
+				Double d = getDouble(flagsKey+flag.getName());
+				if(d == 0.0)
+					continue;
+				flags.put(flag, ((DoubleFlag) flag).unmarshal(d));
 			}else if(flag instanceof LocationFlag){
 				Vector vector = getVector(flagsKey+flag.getName());
 				if(vector.getBlockX() == Integer.MIN_VALUE)
@@ -101,7 +113,10 @@ public class Config extends PluginConfig{
 					continue;
 				flags.put(flag, ((LocationFlag) flag).unmarshal(vector.toLocation(world)));
 			}else if(flag instanceof EnumFlag<?>){
-				flags.put(flag, ((EnumFlag<?>) flag).unmarshal(getString(flagsKey+flag.getName())));
+				String s = getString(flagsKey+flag.getName());
+				if(s.equalsIgnoreCase(""))
+					continue;
+				flags.put(flag, ((EnumFlag<?>) flag).unmarshal(s));
 			}
 		}
 		
