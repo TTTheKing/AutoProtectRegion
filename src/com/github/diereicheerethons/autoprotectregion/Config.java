@@ -62,7 +62,7 @@ public class Config extends PluginConfig{
 			}else if(flag instanceof SetFlag<?>){
 				set(flagsKey+flag.getName(), new ArrayList<String>(),List.class);
 			}else if(flag instanceof DoubleFlag){
-				set(flagsKey+flag.getName(), 0L, Double.class);
+				set(flagsKey+flag.getName(), 0.0, Double.class);
 			}else if(flag instanceof LocationFlag){
 				set(flagsKey+flag.getName(), new Vector(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE), Vector.class);
 			}else if(flag instanceof EnumFlag<?>){
