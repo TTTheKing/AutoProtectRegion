@@ -36,5 +36,6 @@ public class English extends PluginConfig{
 		set("regionNotFound", "No region found.", String.class);
 		set("cantBuildInThisRegion", "You cant protect anything in this region.", String.class);
 		set("canOnlyBuildInSomeRegions", "You can only protect in some regions. Not here", String.class);
+		set("maxRegionsReached", "You have reached the limit of regions.", String.class);
 	}
 }

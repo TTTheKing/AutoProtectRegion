@@ -36,6 +36,7 @@ public class German extends PluginConfig{
 		set("regionNotFound", "Keine Region gefunden.", String.class);
 		set("cantBuildInThisRegion", "Du kannst hier nichts bearbeiten.", String.class);
 		set("canOnlyBuildInSomeRegions", "Du kannst nur in einigen Regionen bearbeiten. Aber nicht hier.", String.class);
+		set("maxRegionsReached", "Limit fuer Regionen erreicht.", String.class);
 	}
 	
 }

@@ -20,6 +20,10 @@ public class APRPlayer {
 			maxRegions = Integer.MAX_VALUE;
 	}
 	
+	public int getMaxRegions(){
+		return maxRegions;
+	}
+	
 	public void setCurrentRegion(APRRegion region){
 		currentRegion = region;
 	}
