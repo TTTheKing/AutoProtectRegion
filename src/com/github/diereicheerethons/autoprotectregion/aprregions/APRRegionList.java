@@ -44,6 +44,15 @@ public class APRRegionList {
 		}
 	}
 	
+	public static int getRegionCountFor(String playerName){
+		int count = 0;
+		for(APRRegion region:list){
+			if(region.getOwner().getName().equalsIgnoreCase(playerName))
+				count++;
+		}
+		return count;
+	}
+	
 	public static void save(){
 		FileConfiguration ymlFile;
 		if(saveFile.exists())

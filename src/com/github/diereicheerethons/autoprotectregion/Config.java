@@ -42,6 +42,7 @@ public class Config extends PluginConfig{
 		set("wgRegionBlacklist", wgRegionBlacklist, List.class);
 		ArrayList<String> wgRegionWhitelist = new ArrayList<String>();
 		set("wgRegionWhitelist", wgRegionWhitelist, List.class);
+		set("maxPlayerRegions", -1, Integer.class);
 		
 		inputDefaultRegionFlags();
 	}
