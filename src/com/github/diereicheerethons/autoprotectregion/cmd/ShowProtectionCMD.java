@@ -12,6 +12,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.diereicheerethons.autoprotectregion.APR;
 import com.github.diereicheerethons.autoprotectregion.Translator;
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegion;
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegionList;
@@ -103,7 +104,7 @@ public class ShowProtectionCMD extends PluginCommand {
 		if(!off){
 			for(Block block: blocks){
 				if(block.getType() == Material.AIR){
-					player.sendBlockChange(new Location(block.getWorld(), block.getX() ,block.getY() ,block.getZ()), Material.WEB, (byte) 0);
+					player.sendBlockChange(new Location(block.getWorld(), block.getX() ,block.getY() ,block.getZ()), Material.valueOf(APR.config.getString("showAirBlock")), (byte) 0);
 				}else if(block.getType().isSolid()){
 					player.sendBlockChange(new Location(block.getWorld(), block.getX() ,block.getY() ,block.getZ()), Material.WOOL, (byte) 5);
 				}

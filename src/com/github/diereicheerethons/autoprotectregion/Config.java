@@ -43,6 +43,7 @@ public class Config extends PluginConfig{
 		ArrayList<String> wgRegionWhitelist = new ArrayList<String>();
 		set("wgRegionWhitelist", wgRegionWhitelist, List.class);
 		set("maxPlayerRegions", -1, Integer.class);
+		set("showAirBlock", "TRIPWIRE", String.class);
 		
 		inputDefaultRegionFlags();
 	}
