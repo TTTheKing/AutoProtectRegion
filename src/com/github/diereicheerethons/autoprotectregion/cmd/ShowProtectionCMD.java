@@ -76,15 +76,20 @@ public class ShowProtectionCMD extends PluginCommand {
 		}
 		
 		boolean off = unreqArgs.containsKey("off");
-		toggleShowProtection(off, player, regionName);
-		return true;
+		return toggleShowProtection(off, player, regionName);
 	}
 
-	public static void toggleShowProtection(boolean off,Player player, String regionName) {
+	public static boolean toggleShowProtection(boolean off,Player player, String regionName) {
 		World world = player.getWorld();
 		RegionManager regionManager = WGBukkit.getRegionManager(world);
 		BukkitWorld bWorld = new BukkitWorld(world);
 		ProtectedPolygonalRegion wgRegion = (ProtectedPolygonalRegion) regionManager.getRegionExact(regionName);
+		
+		if(wgRegion == null){
+			player.sendMessage(ChatColor.RED+"[APR]: "+Translator.translate("regionNotFound") + " (WorldGuard)");
+			return false;
+		}
+		
 		Polygonal2DRegion weRegion = new Polygonal2DRegion(bWorld, wgRegion.getPoints(), wgRegion.getMinimumPoint().getBlockY(), wgRegion.getMaximumPoint().getBlockY());
 		
 		ArrayList<Block> blocks = new ArrayList<Block>();
@@ -108,6 +113,7 @@ public class ShowProtectionCMD extends PluginCommand {
 				player.sendBlockChange(new Location(block.getWorld(), block.getX() ,block.getY() ,block.getZ()), block.getType(), block.getData());
 			}
 		}
+		return true;
 	}
 
 	@Override

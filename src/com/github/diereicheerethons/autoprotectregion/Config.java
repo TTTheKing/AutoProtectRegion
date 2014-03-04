@@ -1,11 +1,9 @@
 package com.github.diereicheerethons.autoprotectregion;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -90,10 +88,7 @@ public class Config extends PluginConfig{
 				flags.put(flag, ((StringFlag) flag).unmarshal(getString(flagsKey+flag.getName())));
 			}else if(flag instanceof SetFlag<?>){
 				List<String> list = getStringList(flagsKey+flag.getName());
-				Set<Object> set = new HashSet<>();
-				for(Object str: list)
-					set.add(str);
-				flags.put(flag, ((SetFlag<?>) flag).unmarshal(set));
+				flags.put(flag, ((SetFlag<?>) flag).unmarshal(list));
 			}else if(flag instanceof DoubleFlag){
 				flags.put(flag, ((DoubleFlag) flag).unmarshal(getDouble(flagsKey+flag.getName())));
 			}else if(flag instanceof LocationFlag){
@@ -104,7 +99,6 @@ public class Config extends PluginConfig{
 					continue;
 				if(vector.getBlockZ() == Integer.MIN_VALUE)
 					continue;
-				
 				flags.put(flag, ((LocationFlag) flag).unmarshal(vector.toLocation(world)));
 			}else if(flag instanceof EnumFlag<?>){
 				flags.put(flag, ((EnumFlag<?>) flag).unmarshal(getString(flagsKey+flag.getName())));
