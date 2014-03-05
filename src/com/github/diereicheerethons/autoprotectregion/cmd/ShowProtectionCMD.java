@@ -80,6 +80,7 @@ public class ShowProtectionCMD extends PluginCommand {
 		return toggleShowProtection(off, player, regionName);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean toggleShowProtection(boolean off,Player player, String regionName) {
 		World world = player.getWorld();
 		RegionManager regionManager = WGBukkit.getRegionManager(world);
