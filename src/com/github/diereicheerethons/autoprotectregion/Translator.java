@@ -46,6 +46,13 @@ public class Translator extends PluginConfig {
 		set("cantBuildInThisRegion", "You cant protect anything in this region.", String.class);
 		set("canOnlyBuildInSomeRegions", "You can only protect in some regions. Not here", String.class);
 		set("maxRegionsReached", "You have reached the limit of regions.", String.class);
+		
+		
+		set("PluginCommand.mustBeExecutedFromConsole", "Command must be executed from the Console!", String.class);
+		set("PluginCommand.noPermissionsForCMD", "No permissions for this command!", String.class);
+		set("PluginCommand.mustBeExecutedAsPlayer", "Command must be executed as Player!", String.class);
+		set("PluginCommand.failureInPlugin", "Failure in Plugin! Please report this to an Admin!", String.class);
+		set("PluginCommand.notAllrequiredArguments", "Please provide all required arguments", String.class);
 	}
 
 }

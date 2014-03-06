@@ -37,6 +37,13 @@ public class German extends PluginConfig{
 		set("cantBuildInThisRegion", "Du kannst hier nichts bearbeiten.", String.class);
 		set("canOnlyBuildInSomeRegions", "Du kannst nur in einigen Regionen bearbeiten. Aber nicht hier.", String.class);
 		set("maxRegionsReached", "Limit fuer Regionen erreicht.", String.class);
+
+		set("PluginCommand.mustBeExecutedFromConsole", "Command muss von der Konsole ausgefuehrt werden!", String.class);
+		set("PluginCommand.noPermissionsForCMD", "Keine Berechtigung dies zu tun!", String.class);
+		set("PluginCommand.mustBeExecutedAsPlayer", "Command muss als Spieler ausgefuehrt werden!", String.class);
+		set("PluginCommand.failureInPlugin", "Failure in Plugin! Please report this to an Admin!", String.class);
+		set("PluginCommand.notAllrequiredArguments", "Bitte alle benoetigten Details angeben", String.class);
+
 	}
 	
 }
