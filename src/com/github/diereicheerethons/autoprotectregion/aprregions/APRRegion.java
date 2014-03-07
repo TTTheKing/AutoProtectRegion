@@ -7,6 +7,7 @@ import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import com.github.diereicheerethons.autoprotectregion.APR;
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
@@ -149,18 +150,37 @@ public class APRRegion {
 	private boolean pointInRange(XZPoint point, long y) {
 		if (allPoints.size() == 0)
 			return true;
-		if (Math.abs(allPoints.getBiggestX() - point.getX()) > maxXWidth)
+		Player player;
+		if (Math.abs(allPoints.getBiggestX() - point.getX()) > maxXWidth){
+			player = (Player) owner;
+			player.sendMessage("bigx -x >maxXWidth");
 			return false;
-		if (Math.abs(allPoints.getSmallestX() - point.getX()) > maxXWidth)
+		}
+		if (Math.abs(allPoints.getSmallestX() - point.getX()) > maxXWidth){
+			player = (Player) owner;
+			player.sendMessage("smallx -x >maxXWidth");
 			return false;
-		if (Math.abs(allPoints.getBiggestZ() - point.getZ()) > maxZWidth)
+		}
+		if (Math.abs(allPoints.getBiggestZ() - point.getZ()) > maxZWidth){
+			player = (Player) owner;
+			player.sendMessage("bigz -z >maxzWidth");
 			return false;
-		if (Math.abs(allPoints.getBiggestZ() - point.getZ()) > maxZWidth)
+		}
+		if (Math.abs(allPoints.getSmallestZ() - point.getZ()) > maxZWidth){
+			player = (Player) owner;
+			player.sendMessage("smallz -z >maxzWidth");
 			return false;
-		if (Math.abs(allPoints.getMaxY() - y) > maxYWidth)
+		}
+		if (Math.abs(allPoints.getMaxY() - y) > maxYWidth){
+			player = (Player) owner;
+			player.sendMessage("maxy -y >maxXWidth");
 			return false;
-		if (Math.abs(allPoints.getMinY() - y) > maxYWidth)
+		}
+		if (Math.abs(allPoints.getMinY() - y) > maxYWidth){
+			player = (Player) owner;
+			player.sendMessage("miny -y >maxyWidth");
 			return false;
+		}
 		return true;
 	}
 

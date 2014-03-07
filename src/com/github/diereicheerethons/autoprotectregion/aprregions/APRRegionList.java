@@ -41,6 +41,13 @@ public class APRRegionList {
 			sender.sendMessage(region.getWgRegionID() + "| World = " +region.getWorld().getName());
 			sender.sendMessage(region.getWgRegionID() + "| maxXWidth = " +region.getMaxXWidth());
 			sender.sendMessage(region.getWgRegionID() + "| maxZWidth = " +region.getMaxZWidth());
+			
+			sender.sendMessage(region.getWgRegionID() + "| maxy = " +region.allPoints.getMaxY());
+			sender.sendMessage(region.getWgRegionID() + "| miny = " +region.allPoints.getMinY());
+			
+			for(XZPoint point:region.allPoints){
+				sender.sendMessage(region.getWgRegionID() + "| XZ === ( "+point.getX()+" | "+point.getZ()+" )");
+			}
 		}
 	}
 	
@@ -55,10 +62,8 @@ public class APRRegionList {
 	
 	public static void save(){
 		FileConfiguration ymlFile;
-		if(saveFile.exists())
-			ymlFile = YamlConfiguration.loadConfiguration(saveFile);
-		else
-			ymlFile = new YamlConfiguration();
+		
+		ymlFile = new YamlConfiguration();
 		
 		for(APRRegion region: list){
 			String key = region.getWgRegionID();

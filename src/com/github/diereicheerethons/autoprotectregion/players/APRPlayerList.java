@@ -21,7 +21,7 @@ public class APRPlayerList {
 	
 	public static void sendDebugData(CommandSender sender){
 		for(APRPlayer aprPlayer: list){
-			sender.sendMessage(aprPlayer.getPlayer().getName() + "| currentRegion = " +aprPlayer.getCurrentRegion());
+			sender.sendMessage(aprPlayer.getPlayer().getName() + "| currentRegion = " +aprPlayer.getCurrentRegion().getWgRegionID());
 			sender.sendMessage(aprPlayer.getPlayer().getName() + "| isEditing = " +aprPlayer.isEditingRegion());
 		}
 	}
