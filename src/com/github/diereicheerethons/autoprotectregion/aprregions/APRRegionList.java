@@ -69,6 +69,7 @@ public class APRRegionList {
 			String key = region.getWgRegionID();
 			ymlFile.set(key + ".maxXWidth", region.getMaxXWidth());
 			ymlFile.set(key + ".maxZWidth", region.getMaxZWidth());
+			ymlFile.set(key + ".maxYWidth", region.getMaxYWidth());
 			ymlFile.set(key + ".worldName", region.getWorld().getName());
 			ymlFile.set(key + ".ownerName", region.getOwner().getName());
 			
