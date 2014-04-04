@@ -1,9 +1,12 @@
 package com.github.diereicheerethons.autoprotectregion.util;
 
+import java.util.logging.Level;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.diereicheerethons.autoprotectregion.APR;
 import com.github.diereicheerethons.autoprotectregion.Translator;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -33,6 +36,10 @@ public class APRUtil {
 	
 	public static void playerMsg(Player sender, String msg){
 		sender.sendMessage(ChatColor.GOLD+"[APR]: "+ChatColor.WHITE+ msg);
+	}
+	
+	public static void warning(String text){
+		APR.instance.getLogger().log(Level.WARNING, text);
 	}
 	
 }

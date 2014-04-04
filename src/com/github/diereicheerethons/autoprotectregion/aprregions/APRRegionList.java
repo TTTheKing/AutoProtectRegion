@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.github.diereicheerethons.autoprotectregion.APR;
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
+import com.github.diereicheerethons.autoprotectregion.util.APRUtil;
 
 public class APRRegionList {
 	private static File saveFile = new File(AutoProtectRegion.instance.getDataFolder(), "regions.yml");
@@ -112,6 +113,11 @@ public class APRRegionList {
 			
 			String worldName = ymlFile.getString(key + ".worldName");
 			World world = AutoProtectRegion.instance.getServer().getWorld(worldName);
+			if(world == null){
+				APRUtil.warning("World not found for region "+key+" skipping it!");
+				continue;
+			}
+			
 			String ownerName = ymlFile.getString(key + ".ownerName");
 			OfflinePlayer owner = AutoProtectRegion.instance.getServer().getOfflinePlayer(ownerName);
 			

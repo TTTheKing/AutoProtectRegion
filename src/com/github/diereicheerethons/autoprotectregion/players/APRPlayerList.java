@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.github.diereicheerethons.autoprotectregion.AutoProtectRegion;
 import com.github.diereicheerethons.autoprotectregion.aprregions.APRRegionList;
+import com.github.diereicheerethons.autoprotectregion.util.APRUtil;
 
 public class APRPlayerList {
 
@@ -73,6 +74,10 @@ public class APRPlayerList {
 		
 		for(String key: keys){
 			OfflinePlayer player = AutoProtectRegion.instance.getServer().getOfflinePlayer(key);
+			if(player == null){
+				APRUtil.warning("Player "+key+" not found! Skip loading...");
+				continue;
+			}
 			APRPlayer aprPlayer = getOrCreateAPRPlayer(player);
 			aprPlayer.setEditingRegion(ymlFile.getBoolean(key+".isEditing"));
 			if(ymlFile.contains(key+".currentRegion"))
